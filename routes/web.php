@@ -3,8 +3,18 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+
+// Front Facing Routes
 Route::get('/', function () {
     return view('index');
+});
+// About route
+Route::get('/about', function () {
+    return view('about');
+});
+// Catalog route
+Route::get('/catalog', function () {
+    return view('catalog');
 });
 
 Route::get('/dashboard', function () {
