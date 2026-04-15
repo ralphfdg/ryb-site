@@ -16,6 +16,10 @@ Route::get('/about', function () {
 Route::get('/catalog', function () {
     return view('catalog');
 });
+// Contact route
+Route::get('/contact', function () {
+    return view('contact');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -4,8 +4,7 @@
 
             <div class="flex items-center">
                 <a href="/" class="flex items-center transition hover:opacity-80">
-                    <img src="{{ asset('images/ryb-log.png') }}" alt="RYB Motors Logo"
-                        class="h-16 w-auto object-contain">
+                    <img src="{{ asset('images/ryb-log.png') }}" alt="RYB Motors Logo" class="h-16 w-auto object-contain">
                 </a>
             </div>
 
@@ -14,7 +13,8 @@
                     Catalog</a>
                 <a href="{{ url('/about') }}"
                     class="text-ryb-light/80 hover:text-ryb-red transition duration-150">About</a>
-                <a href="#" class="text-ryb-light/80 hover:text-ryb-red transition duration-150">Contact</a>
+                <a href="{{ url('/contact') }}"
+                    class="text-ryb-light/80 hover:text-ryb-red transition duration-150">Contact</a>
 
                 @auth
                     <a href="{{ url('/dashboard') }}"
