@@ -19,6 +19,8 @@ export default {
                 'ryb-dark': '#3E3636',
                 'ryb-red': '#D72323',
                 'ryb-light': '#F5EDED',
+                'ryb-yellow': '#F5C518',
+                'ryb-yellow-dark': '#D4AC00',
             }
         },
     },
