@@ -33,6 +33,16 @@ Route::middleware('auth')->group(function () {
     ;
 });
 
+Route::get('/admin', function () {
+    return view('admin.dashboard');
+});
+
+Route::get('/admin/inquiries', function () {
+    return view('admin.inquiries');
+});
+
+Route::get('/admin/customers', function () {
+    return view('admin.customers');
 Route::get('/login', function () {
     return view('login');
 })->name('login');
