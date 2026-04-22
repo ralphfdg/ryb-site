@@ -2,9 +2,24 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CarController; // 1. Import your new CarController
 
+// Front Facing Routes
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
+});
+// About route
+Route::get('/about', function () {
+    return view('about');
+});
+// Catalog route
+Route::get('/catalog', function () {
+    return view('catalog');
+});
+// Contact route
+Route::get('/contact', function () {
+    return view('contact');
 });
 
 Route::get('/dashboard', function () {
@@ -37,5 +52,16 @@ Route::get('/reset-password/{token}', function ($token) {
 Route::get('/profile', function () {
     return view('profile.profile'); 
 })->name('profile');
+
+// Admin Routes Group
+// 2. Added name('admin.') so all routes inside get the 'admin.' prefix
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    
+    // 3. Changed 'admin.dashboard' to just 'dashboard' because the group handles the prefix now
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // 4. Your new Inventory routes! This one line creates index, create, store, edit, update, destroy
+    Route::resource('inventory', CarController::class);
+});
 
 require __DIR__.'/auth.php';
