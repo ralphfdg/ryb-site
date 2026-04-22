@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CarController; // 1. Import your new CarController
 
 // Front Facing Routes
 Route::get('/', function () {
@@ -29,18 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::get('/admin', function () {
-    return view('admin.dashboard');
-});
-
-Route::get('/admin/inquiries', function () {
-    return view('admin.inquiries');
-});
-
-Route::get('/admin/customers', function () {
-    return view('admin.customers');
 });
 
 require __DIR__.'/auth.php';

@@ -43,6 +43,7 @@
 
     <div x-data="homeController()">
 
+        {{-- ===== HERO SECTION ===== --}}
         <div class="relative h-[90vh] flex items-center justify-center overflow-hidden">
             <div class="absolute inset-0 z-0">
                 <img src="https://placehold.co/1920x1080/000000/3e3636?text=Luxury+Showroom" alt="Showroom"
@@ -55,20 +56,27 @@
                 <p class="text-lg md:text-xl text-ryb-light/80 mb-10 max-w-2xl mx-auto">Premium vehicles, transparent
                     pricing, and a seamless buying experience.</p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="#"
-                        class="px-8 py-4 bg-ryb-red text-white font-semibold rounded-full hover:bg-red-700 transition shadow-[0_0_20px_rgba(215,35,35,0.4)]">View
-                        Inventory</a>
+                    {{-- PRIMARY CTA: Yellow (Prince's brand color) --}}
+                    <a href="/catalog"
+                        class="px-8 py-4 bg-ryb-yellow text-ryb-black font-bold rounded-full hover:bg-ryb-yellow-dark transition shadow-[0_0_24px_rgba(245,197,24,0.45)]">
+                        View Inventory
+                    </a>
+                    <a href="/contact"
+                        class="px-8 py-4 border border-ryb-light/30 text-ryb-light font-semibold rounded-full hover:bg-ryb-light/10 transition backdrop-blur-sm">
+                        Contact Us
+                    </a>
                 </div>
             </div>
         </div>
 
+        {{-- ===== QUICK SEARCH BAR ===== --}}
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-16">
             <div class="bg-ryb-dark/40 backdrop-blur-xl border border-ryb-dark rounded-2xl p-6 shadow-2xl">
                 <form class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                     <div>
                         <label class="block text-sm font-medium text-ryb-light/70 mb-1">Make / Brand</label>
                         <select
-                            class="w-full bg-ryb-black border border-ryb-dark text-ryb-light rounded-lg focus:ring-ryb-red focus:border-ryb-red px-4 py-3">
+                            class="w-full bg-ryb-black border border-ryb-dark text-ryb-light rounded-lg focus:ring-ryb-yellow focus:border-ryb-yellow px-4 py-3">
                             <option>All Brands</option>
                             <option>Toyota</option>
                             <option>Honda</option>
@@ -78,7 +86,7 @@
                     <div>
                         <label class="block text-sm font-medium text-ryb-light/70 mb-1">Max Price</label>
                         <select
-                            class="w-full bg-ryb-black border border-ryb-dark text-ryb-light rounded-lg focus:ring-ryb-red focus:border-ryb-red px-4 py-3">
+                            class="w-full bg-ryb-black border border-ryb-dark text-ryb-light rounded-lg focus:ring-ryb-yellow focus:border-ryb-yellow px-4 py-3">
                             <option>Any Price</option>
                             <option>Under $30,000</option>
                             <option>Under $50,000</option>
@@ -88,53 +96,69 @@
                     <div>
                         <label class="block text-sm font-medium text-ryb-light/70 mb-1">Year</label>
                         <select
-                            class="w-full bg-ryb-black border border-ryb-dark text-ryb-light rounded-lg focus:ring-ryb-red focus:border-ryb-red px-4 py-3">
+                            class="w-full bg-ryb-black border border-ryb-dark text-ryb-light rounded-lg focus:ring-ryb-yellow focus:border-ryb-yellow px-4 py-3">
                             <option>Any Year</option>
                             <option>2024 & Newer</option>
                             <option>2020 - 2023</option>
                         </select>
                     </div>
                     <button type="submit"
-                        class="w-full bg-ryb-red text-white font-semibold py-3 rounded-lg hover:bg-red-700 transition">Search
-                        Vehicles</button>
+                        class="w-full bg-ryb-yellow text-ryb-black font-bold py-3 rounded-lg hover:bg-ryb-yellow-dark transition shadow-[0_0_16px_rgba(245,197,24,0.3)]">
+                        Search Vehicles
+                    </button>
                 </form>
             </div>
         </div>
 
+        {{-- ===== BRAND MARQUEE ===== --}}
         <div class="border-y border-ryb-dark bg-ryb-black py-10 mt-20 overflow-hidden">
             <div
                 class="flex space-x-12 animate-marquee whitespace-nowrap opacity-50 hover:opacity-100 transition duration-500">
                 @for ($i = 0; $i < 2; $i++)
                     <span class="text-2xl font-bold text-ryb-light tracking-widest">TOYOTA</span>
+                    <span class="text-ryb-yellow text-2xl font-bold tracking-widest">•</span>
                     <span class="text-2xl font-bold text-ryb-light tracking-widest">HONDA</span>
+                    <span class="text-ryb-yellow text-2xl font-bold tracking-widest">•</span>
                     <span class="text-2xl font-bold text-ryb-light tracking-widest">TESLA</span>
+                    <span class="text-ryb-yellow text-2xl font-bold tracking-widest">•</span>
                     <span class="text-2xl font-bold text-ryb-light tracking-widest">FORD</span>
+                    <span class="text-ryb-yellow text-2xl font-bold tracking-widest">•</span>
                     <span class="text-2xl font-bold text-ryb-light tracking-widest">BMW</span>
+                    <span class="text-ryb-yellow text-2xl font-bold tracking-widest">•</span>
                     <span class="text-2xl font-bold text-ryb-light tracking-widest">MERCEDES</span>
+                    <span class="text-ryb-yellow text-2xl font-bold tracking-widest">•</span>
                 @endfor
             </div>
         </div>
 
+        {{-- ===== FEATURED INVENTORY ===== --}}
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-            <h2 class="text-3xl font-bold text-ryb-light mb-8">Featured <span class="text-ryb-red">Inventory</span></h2>
+            <h2 class="text-3xl font-bold text-ryb-light mb-8">Featured <span class="text-ryb-yellow">Inventory</span></h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach ($featuredCars as $car)
                     <div
-                        class="bg-ryb-dark/30 backdrop-blur-lg border border-ryb-dark rounded-2xl overflow-hidden hover:bg-ryb-dark/50 transition">
-                        <img src="{{ $car['image'] }}"
-                            class="w-full h-48 object-cover opacity-90 hover:opacity-100 transition">
+                        class="group bg-ryb-dark/30 backdrop-blur-lg border border-ryb-dark rounded-2xl overflow-hidden hover:border-ryb-yellow/40 transition duration-300 shadow-xl">
+                        <div class="relative overflow-hidden">
+                            <img src="{{ $car['image'] }}"
+                                class="w-full h-48 object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-500">
+                        </div>
                         <div class="p-6">
                             <h3 class="text-xl font-bold text-ryb-light">{{ $car['brand'] }} {{ $car['model'] }}</h3>
-                            <p class="text-ryb-red font-medium mt-2">${{ number_format($car['price']) }}</p>
+                            <p class="text-ryb-yellow font-bold text-lg mt-2">${{ number_format($car['price']) }}</p>
+                            <a href="/catalog"
+                                class="mt-4 inline-block px-5 py-2 bg-ryb-yellow text-ryb-black text-sm font-bold rounded-lg hover:bg-ryb-yellow-dark transition">
+                                View Details →
+                            </a>
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
 
+        {{-- ===== LIFESTYLE GALLERY ===== --}}
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-ryb-light mb-2">The RYB <span class="text-ryb-red">Lifestyle</span></h2>
+                <h2 class="text-3xl font-bold text-ryb-light mb-2">The RYB <span class="text-ryb-yellow">Lifestyle</span></h2>
                 <p class="text-ryb-light/60">A glimpse into our premium showroom.</p>
             </div>
 
@@ -158,9 +182,10 @@
             </div>
         </div>
 
+        {{-- ===== RECENTLY DELIVERED ===== --}}
         <div class="bg-ryb-dark/10 border-t border-ryb-dark py-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-ryb-light mb-8">Recently <span class="text-ryb-red">Delivered</span></h2>
+                <h2 class="text-3xl font-bold text-ryb-light mb-8">Recently <span class="text-ryb-yellow">Delivered</span></h2>
 
                 <div class="flex overflow-x-auto space-x-6 pb-8 snap-x scrollbar-hide">
                     @foreach ($soldCars as $sold)
@@ -180,57 +205,52 @@
 
     </div>
 
+    {{-- ===== STATS ===== --}}
     <div class="border-y border-ryb-dark bg-gradient-to-r from-ryb-black via-ryb-dark/40 to-ryb-black py-16 mt-12"
         x-data="statsCounter()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-ryb-dark/50">
-
                 <div class="p-4">
                     <div class="text-4xl md:text-5xl font-bold text-ryb-light mb-2">
                         <span x-text="vehiclesDelivered">0</span>+
                     </div>
-                    <p class="text-ryb-red font-semibold uppercase tracking-widest text-sm">Vehicles Delivered</p>
+                    <p class="text-ryb-yellow font-semibold uppercase tracking-widest text-sm">Vehicles Delivered</p>
                 </div>
-
                 <div class="p-4">
                     <div class="text-4xl md:text-5xl font-bold text-ryb-light mb-2">
                         <span x-text="partneredBrands">0</span>+
                     </div>
-                    <p class="text-ryb-red font-semibold uppercase tracking-widest text-sm">Partnered Brands</p>
+                    <p class="text-ryb-yellow font-semibold uppercase tracking-widest text-sm">Partnered Brands</p>
                 </div>
-
                 <div class="p-4">
                     <div class="text-4xl md:text-5xl font-bold text-ryb-light mb-2">
                         <span x-text="happyClients">0</span>%
                     </div>
-                    <p class="text-ryb-red font-semibold uppercase tracking-widest text-sm">Happy Clients</p>
+                    <p class="text-ryb-yellow font-semibold uppercase tracking-widest text-sm">Happy Clients</p>
                 </div>
-
                 <div class="p-4">
                     <div class="text-4xl md:text-5xl font-bold text-ryb-light mb-2">
                         <span x-text="yearsExperience">0</span>
                     </div>
-                    <p class="text-ryb-red font-semibold uppercase tracking-widest text-sm">Years Experience</p>
+                    <p class="text-ryb-yellow font-semibold uppercase tracking-widest text-sm">Years Experience</p>
                 </div>
-
             </div>
         </div>
     </div>
 
+    {{-- ===== TESTIMONIALS ===== --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-ryb-light mb-4">What Our <span class="text-ryb-red">Clients
-                    Say</span></h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-ryb-light mb-4">What Our <span class="text-ryb-yellow">Clients Say</span></h2>
             <p class="text-ryb-light/60 max-w-2xl mx-auto">Don't just take our word for it. Hear from the community of
                 automotive enthusiasts who found their dream cars with RYB.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
             <div
-                class="bg-ryb-dark/30 backdrop-blur-lg border border-ryb-dark rounded-2xl p-8 relative hover:-translate-y-2 transition duration-300">
-                <div class="absolute top-6 right-8 text-6xl text-ryb-red opacity-20 font-serif">"</div>
-                <div class="flex text-ryb-red mb-4 text-xl">★★★★★</div>
+                class="bg-ryb-dark/30 backdrop-blur-lg border border-ryb-dark rounded-2xl p-8 relative hover:-translate-y-2 transition duration-300 hover:border-ryb-yellow/30">
+                <div class="absolute top-6 right-8 text-6xl text-ryb-yellow opacity-20 font-serif">"</div>
+                <div class="flex text-ryb-yellow mb-4 text-xl">★★★★★</div>
                 <p class="text-ryb-light/80 italic mb-6 relative z-10">"The easiest car buying experience I have ever had.
                     The team at RYB was completely transparent about pricing and helped me secure amazing financing for my
                     new M4."</p>
@@ -247,9 +267,9 @@
             </div>
 
             <div
-                class="bg-ryb-dark/30 backdrop-blur-lg border border-ryb-dark rounded-2xl p-8 relative hover:-translate-y-2 transition duration-300">
-                <div class="absolute top-6 right-8 text-6xl text-ryb-red opacity-20 font-serif">"</div>
-                <div class="flex text-ryb-red mb-4 text-xl">★★★★★</div>
+                class="bg-ryb-dark/30 backdrop-blur-lg border border-ryb-dark rounded-2xl p-8 relative hover:-translate-y-2 transition duration-300 hover:border-ryb-yellow/30">
+                <div class="absolute top-6 right-8 text-6xl text-ryb-yellow opacity-20 font-serif">"</div>
+                <div class="flex text-ryb-yellow mb-4 text-xl">★★★★★</div>
                 <p class="text-ryb-light/80 italic mb-6 relative z-10">"I traded in my old sedan for a Tesla Model 3. The
                     RYB staff made the trade-in process seamless and gave me a fantastic value. Highly recommended!"</p>
                 <div class="flex items-center gap-4">
@@ -265,9 +285,9 @@
             </div>
 
             <div
-                class="bg-ryb-dark/30 backdrop-blur-lg border border-ryb-dark rounded-2xl p-8 relative hover:-translate-y-2 transition duration-300">
-                <div class="absolute top-6 right-8 text-6xl text-ryb-red opacity-20 font-serif">"</div>
-                <div class="flex text-ryb-red mb-4 text-xl">★★★★★</div>
+                class="bg-ryb-dark/30 backdrop-blur-lg border border-ryb-dark rounded-2xl p-8 relative hover:-translate-y-2 transition duration-300 hover:border-ryb-yellow/30">
+                <div class="absolute top-6 right-8 text-6xl text-ryb-yellow opacity-20 font-serif">"</div>
+                <div class="flex text-ryb-yellow mb-4 text-xl">★★★★★</div>
                 <p class="text-ryb-light/80 italic mb-6 relative z-10">"I love the glass showroom and the premium feel of
                     the dealership. They don't just sell cars; they sell an experience. Thrilled with my Camry TRD."</p>
                 <div class="flex items-center gap-4">
@@ -281,33 +301,16 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <style>
         @keyframes marquee {
-            0% {
-                transform: translateX(0%);
-            }
-
-            100% {
-                transform: translateX(-50%);
-            }
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
         }
-
-        .animate-marquee {
-            animation: marquee 25s linear infinite;
-        }
-
-        /* Hide scrollbar for the sold cars carousel */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .animate-marquee { animation: marquee 25s linear infinite; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 @endsection
