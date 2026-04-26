@@ -1,51 +1,46 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Car extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
         'brand_id',
-        'model',
-        'year',
+        'model_name',
         'price',
-        'description',
-        'status', // e.g., 'Available', 'Sold'
+        'status',
+        'features',
     ];
 
-    // Spatie Medialibrary configuration
-    public function registerMediaCollections(): void
+    protected function casts(): array
     {
-        $this->addMediaCollection('car_images')
-             ->useFallbackUrl('/images/placeholder-car.png')
-             ->useFallbackPath(public_path('/images/placeholder-car.png'));
+        return [
+            'price' => 'decimal:2',
+            'features' => 'array',
+        ];
     }
 
-    // Relationships
-    public function brand()
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
 
-    public function specification()
+    public function specification(): HasOne
     {
         return $this->hasOne(CarSpecification::class);
     }
 
-    public function inquiries()
+    public function sales(): HasMany
     {
-        return $this->hasMany(Inquiry::class);
-    }
-
-    public function sale()
-    {
-        return $this->hasOne(Sale::class);
+        return $this->hasMany(Sale::class);
     }
 }

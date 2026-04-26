@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('brand_id');
             $table->string('model_name', 150);
             $table->integer('year');
-            $table->decimal('price', 5, 2);
+            $table->decimal('price', 14, 2);
             $table->integer('mileage');
             $table->string('transmission', 20);
             $table->string('fuel_type', 20);

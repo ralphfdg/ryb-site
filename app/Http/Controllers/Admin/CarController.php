@@ -1,33 +1,53 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Car;
-use App\Http\Requests\StoreCarRequest;
+use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CarController extends Controller
 {
-    // ... index, create methods go here ...
-
-    /**
-     * Store a newly created car in storage.
-     */
-    public function store(StoreCarRequest $request)
+    public function index(): View
     {
-        // 1. Create the base car record using the validated data
-        $car = Car::create($request->validated());
-
-        // 2. Handle the Spatie Medialibrary image uploads
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $car->addMedia($image)->toMediaCollection('car_images');
-            }
-        }
-
-        // 3. Redirect back to your inventory table with a success message
-        return redirect()->route('admin.inventory.index')
-                         ->with('success', 'Vehicle listing and images successfully saved.');
+        // Eager load brand. Admin sees all statuses (Available, Sold, Reserved)
+        $cars = Car::with('brand')->latest()->paginate(20);
+        return view('admin.cars.index', compact('cars'));
     }
+
+    public function create(): View
+    {
+        $brands = Brand::all();
+        return view('admin.cars.create', compact('brands'));
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'brand_id' => ['required', 'exists:brands,id'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'status' => ['required', 'in:Available,Sold,Reserved'],
+            'vin_number' => ['required', 'string', 'unique:car_specifications,vin_number'],
+            // Features would be validated as an array here
+        ]);
+
+        // Create the Car
+        $car = Car::create([
+            'brand_id' => $validated['brand_id'],
+            'price' => $validated['price'],
+            'status' => $validated['status'],
+        ]);
+
+        // Create the 1:1 Specification linking the VIN
+        $car->specification()->create([
+            'vin_number' => $validated['vin_number']
+        ]);
+
+        return redirect()->route('admin.cars.index')->with('success', 'Car added to inventory successfully.');
+    }
+
+    // edit(), update(), and destroy() methods would follow similar standard Laravel patterns...
+    // destroy() will automatically utilize the SoftDeletes trait we added to the model.
 }

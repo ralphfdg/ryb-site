@@ -10,8 +10,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/home.js'])
 </head>
-<body class="font-sans antialiased bg-ryb-black text-ryb-light min-h-screen flex flex-col">
-    
+<body class="bg-ryb-darker text-ryb-light antialiased font-sans selection:bg-ryb-red selection:text-white">    
     @include('layouts.navigation')
 
     <main class="flex-grow">

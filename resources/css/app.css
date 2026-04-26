@@ -1,3 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'swiper/css/bundle';
+@import "tailwindcss";
+
+@theme {
+  /* Elevated "Obsidian & Crimson" Palette */
+  --color-ryb-darker: #09090b; /* Base Level: Deepest background */
+  --color-ryb-dark: #18181b;   /* Mid Level: Cards and alternating sections */
+  --color-ryb-muted: #27272a;  /* Top Level: Borders, inputs, and distinct edges */
+  
+  --color-ryb-light: #d4d4d8;  /* Text */
+  
+  --color-ryb-red: #dc2626; 
+  --color-ryb-red-dark: #991b1b; 
+
+  /* Custom Animations */
+  --animate-marquee: marquee 25s linear infinite;
+
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+}
