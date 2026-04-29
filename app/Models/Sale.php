@@ -10,11 +10,8 @@ class Sale extends Model
 {
     use HasUuids, SoftDeletes;
 
-    protected $fillable = [
-        'car_id',
-        'customer_id',
-        'sale_price',
-        'sale_date',
+   protected $fillable = [
+        'car_id', 'customer_id', 'sale_price', 'sale_date', 'payment_method'
     ];
 
     protected function casts(): array

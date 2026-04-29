@@ -14,18 +14,18 @@ class Car extends Model implements HasMedia
     use SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
-        'brand_id',
-        'model_name',
-        'price',
-        'status',
-        'features',
+        'brand_id', 'model_name', 'year', 'price', 
+        'mileage', 'transmission', 'fuel_type', 
+        'description', 'features', 'status'
     ];
 
+    // Laravel 12 casting method
     protected function casts(): array
     {
         return [
-            'price' => 'decimal:2',
             'features' => 'array',
+            'price' => 'decimal:2',
+            'year' => 'integer',
         ];
     }
 

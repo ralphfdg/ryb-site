@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -19,16 +18,27 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-    /**
+   /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(\App\Http\Requests\Auth\LoginRequest $request): \Illuminate\Http\RedirectResponse
     {
+        // Validates credentials against the database
         $request->authenticate();
 
+        // Regenerates the session ID to prevent fixation attacks (Security Best Practice)
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Extract the authenticated user
+        $user = $request->user();
+
+        // Route based on Spatie Roles (Adhering to RYB Tech Stack)
+        if ($user->hasRole('Admin')) {
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
+        // Fallback for standard customers
+        return redirect()->intended(route('home'));
     }
 
     /**
