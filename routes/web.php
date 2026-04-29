@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CarController;
 use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\CustomerController;
 
 // Public Pages
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -40,7 +41,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/sales', function() { return 'Sales View'; })->name('sales.index');
     
     // Customers Placeholder Routes
-    Route::get('/customers', function() { return 'Customers View'; })->name('customers.index');
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     
     // Inquiries Placeholder Routes
     Route::get('/inquiries', function() { return 'Inquiries View'; })->name('inquiries.index');

@@ -122,8 +122,8 @@
                                 
                                 <h3 class="text-lg font-bold text-white mb-1">
                                     {{ $car->brand->brand_name ?? 'Unknown Brand' }} 
-                                    {{-- If you have models stored in the JSON features array, you can output it like this: --}}
-                                    <span class="text-ryb-light/70 font-medium">{{ $car->features['model'] ?? '' }}</span>
+                                    {{-- Adjusted this block to output the database column 'model_name' directly --}}
+                                    <span class="text-ryb-light/70 font-medium">{{ $car->model_name }}</span>
                                 </h3>
                                 
                                 <p class="text-2xl font-bold text-ryb-red mb-4">${{ number_format($car->price, 2) }}</p>
@@ -151,9 +151,3 @@
             <div class="mt-12 flex justify-center">
                 {{-- Ensures the pagination uses your Tailwind layout properly --}}
                 {{ $cars->withQueryString()->links() }}
-            </div>
-
-        </main>
-    </div>
-</div>
-@endsection

@@ -5,7 +5,6 @@
             <div class="flex items-center">
                 <a href="/" class="flex items-center transition hover:opacity-80">
                     <img src="{{ asset('images/ryb-log.png') }}" alt="RYB Motors Logo" class="h-16 w-auto object-contain">
-
                 </a>
             </div>
 
@@ -33,6 +32,16 @@
                             My Dashboard
                         </a>
                     @endif
+
+                    {{-- Properly configured POST Form for Logout --}}
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <a href="{{ route('logout') }}" 
+                           onclick="event.preventDefault(); this.closest('form').submit();"
+                           class="px-5 py-2 bg-ryb-red text-white font-bold rounded-lg hover:bg-ryb-red-dark transition shadow-md border border-ryb-red-dark cursor-pointer">
+                            Log out
+                        </a>
+                    </form>
                 @endauth
             </div>
         </div>

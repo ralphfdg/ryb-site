@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -52,6 +53,11 @@ class User extends Authenticatable
     }
 
     public function purchases()
+    {
+        return $this->hasMany(Sale::class, 'customer_id');
+    }
+
+    public function sales(): HasMany
     {
         return $this->hasMany(Sale::class, 'customer_id');
     }

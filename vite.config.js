@@ -12,6 +12,7 @@ export default defineConfig({
                 "resources/js/home.js",
                 'resources/js/admin/dashboard.js',
                 'resources/js/admin/car-form.js',
+                'resources/js/admin/customers.js'
             ],
             refresh: true,
         }),

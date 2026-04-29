@@ -20,14 +20,13 @@ class CatalogController extends Controller
                 'status',
                 'price',
                 AllowedFilter::exact('brand_id'),
-                // We can add custom filters here for features JSON later
+                // Custom filters for features JSON can be added here later
             ])
             ->allowedSorts(['price', 'created_at'])
             ->with('brand') // Eager load the brand relationship to prevent N+1 performance bottlenecks
-            ->where('status', 'Available') // Default to only showing available cars to the public
             ->paginate(12);
 
-        // We will pass this to the Blade view we build in Phase 4
+        // Pass the query results to the Blade view
         return view('catalog.index', compact('cars'));
     }
 
@@ -41,4 +40,4 @@ class CatalogController extends Controller
         
         return view('catalog.show', compact('car'));
     }
-}   
+}

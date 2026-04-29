@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             BrandSeeder::class,
             UserSeeder::class,
+            VehicleSeeder::class,
         ]);
     }
 }
