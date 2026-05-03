@@ -1,34 +1,48 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Sale extends Model
 {
-    use HasUuids, SoftDeletes;
+    use SoftDeletes, HasUuids;
 
-   protected $fillable = [
-        'car_id', 'customer_id', 'sale_price', 'sale_date', 'payment_method'
-    ];
+    // Explicitly define the primary key since it's not 'id'
+    protected $primaryKey = 'uuid';
+
+    protected $guarded = ['uuid'];
 
     protected function casts(): array
     {
         return [
-            'sale_date' => 'datetime',
             'sale_price' => 'decimal:2',
         ];
     }
 
+    /**
+     * The vehicle that was sold.
+     */
     public function car(): BelongsTo
     {
-        return $this->belongsTo(Car::class)->withTrashed(); // Retrieve even if car is soft deleted
+        return $this->belongsTo(Car::class);
     }
 
+    /**
+     * The customer who purchased the vehicle.
+     */
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'customer_id')->withTrashed(); // Retrieve even if user is soft deleted
+        return $this->belongsTo(User::class, 'customer_id');
+    }
+
+    /**
+     * The appointment/negotiation that led to this sale.
+     */
+    public function appointment(): BelongsTo
+    {
+        return $this->belongsTo(Appointment::class);
     }
 }

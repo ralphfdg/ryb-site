@@ -6,15 +6,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inquiry extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'name',
-        'email',
-        'message',
-    ];
+    protected $guarded = ['id'];
 
+    /**
+     * The user who made the inquiry (Nullable for guest traffic).
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The specific car inquired about (Nullable for general questions).
+     */
+    public function car(): BelongsTo
+    {
+        return $this->belongsTo(Car::class);
     }
 }

@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CarSpecification extends Model
 {
-    protected $fillable = [
-        'car_id',
-        'vin_number',
-    ];
+    protected $guarded = ['id'];
 
+    /**
+     * Get the car that owns the specification.
+     */
     public function car(): BelongsTo
     {
         return $this->belongsTo(Car::class);

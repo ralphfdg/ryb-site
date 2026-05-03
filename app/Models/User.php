@@ -1,22 +1,20 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Permission\Traits\HasRoles; // Spatie RBAC integration
 
 class User extends Authenticatable
 {
-    use HasUuids, SoftDeletes, HasRoles, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes, HasUuids, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // By default, HasUuids assumes the primary key is 'id', which matches our migration.
+
     protected $fillable = [
         'name',
         'email',
@@ -24,21 +22,11 @@ class User extends Authenticatable
         'phone_number',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -47,18 +35,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function inquiries()
+    public function appointments(): HasMany
     {
-        return $this->hasMany(Inquiry::class);
-    }
-
-    public function purchases()
-    {
-        return $this->hasMany(Sale::class, 'customer_id');
+        return $this->hasMany(Appointment::class);
     }
 
     public function sales(): HasMany
     {
         return $this->hasMany(Sale::class, 'customer_id');
     }
-}   
+
+    public function inquiries(): HasMany
+    {
+        return $this->hasMany(Inquiry::class);
+    }
+}

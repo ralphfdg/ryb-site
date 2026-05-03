@@ -13,20 +13,20 @@ return new class extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('brand_id');
-            $table->string('model_name', 150);
-            $table->integer('year');
-            $table->decimal('price', 14, 2);
-            $table->integer('mileage');
-            $table->string('transmission', 20);
-            $table->string('fuel_type', 20);
-            $table->text('description');
-            $table->json('features');
-            $table->string('status');
-            $table->timestamps();
-            $table->softDeletes();
-
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
+        $table->foreignId('brand_id')->constrained('brands')->cascadeOnDelete();
+        $table->string('model_name');
+        $table->string('transmission');
+        $table->string('fuel_type');
+        $table->integer('year');
+        $table->integer('mileage');
+        $table->integer('previous_owners')->default(0);
+        $table->integer('plate_ending');
+        $table->decimal('price', 12, 2);
+        $table->json('features'); // Cast to AsArrayObject::class in model
+        $table->enum('status', ['Available', 'Reserved', 'Sold'])->default('Available');
+        $table->boolean('is_featured')->default(false);
+        $table->timestamps();
+        $table->softDeletes();
         });
     }
 

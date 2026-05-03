@@ -13,15 +13,13 @@ return new class extends Migration
     {
         Schema::create('car_specifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('car_id')->unique();;
+            $table->foreignId('car_id')->unique()->constrained('cars')->cascadeOnDelete();
             $table->string('vin_number', 17)->unique();;
             $table->string('engine_type', 50);
             $table->string('color_exterior', 30);
             $table->string('color_interior', 30);
             $table->string('fuel_capacity', 15);
             $table->timestamps();
-
-            $table->foreign('car_id')->references('id')->on('cars')->onDelete('cascade');
         });
     }
 
