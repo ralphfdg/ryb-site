@@ -1,16 +1,17 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Car extends Model implements HasMedia
 {
-    use SoftDeletes, InteractsWithMedia;
+    use InteractsWithMedia, SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -37,5 +38,10 @@ class Car extends Model implements HasMedia
     public function carSpecification(): HasOne
     {
         return $this->hasOne(CarSpecification::class);
+    }
+
+    public function carType()
+    {
+        return $this->belongsTo(CarType::class);
     }
 }

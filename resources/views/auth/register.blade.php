@@ -14,9 +14,9 @@
             --red:     #c0392b;
             --red-bright: #e74c3c;
             --offwhite: #f5ede8;
-            --yellow:  #f5c518;
+            --yellow:  #EEDF7A; /* Applied correct branding hex */
             --glass-bg: rgba(46,40,40,0.55);
-            --glass-border: rgba(245,197,24,0.18);
+            --glass-border: rgba(238, 223, 122, 0.18);
             --text-muted: rgba(245,237,232,0.5);
         }
 
@@ -35,7 +35,7 @@
             position: fixed; inset: 0;
             background:
                 radial-gradient(ellipse 70% 50% at 80% 10%, rgba(192,57,43,0.15) 0%, transparent 55%),
-                radial-gradient(ellipse 50% 70% at 10% 85%, rgba(245,197,24,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 70% at 10% 85%, rgba(238, 223, 122, 0.06) 0%, transparent 50%),
                 #0a0a0a;
             z-index: 0;
         }
@@ -65,7 +65,7 @@
             flex-direction: column;
             justify-content: center;
             padding: 60px 70px;
-            border-left: 1px solid rgba(245,197,24,0.1);
+            border-left: 1px solid rgba(238, 223, 122, 0.1);
             order: 2;
             animation: slideInRight 0.8s cubic-bezier(0.22,1,0.36,1) both;
         }
@@ -111,8 +111,8 @@
 
         .perk-icon {
             width: 28px; height: 28px;
-            background: rgba(245,197,24,0.1);
-            border: 1px solid rgba(245,197,24,0.25);
+            background: rgba(238, 223, 122, 0.1);
+            border: 1px solid rgba(238, 223, 122, 0.25);
             border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
@@ -141,6 +141,26 @@
         }
 
         .form-header { margin-bottom: 32px; }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover { color: var(--yellow); }
+
+        .back-btn svg {
+            width: 16px; height: 16px;
+            stroke: currentColor; stroke-width: 2; fill: none;
+            stroke-linecap: round; stroke-linejoin: round;
+        }
 
         .form-eyebrow {
             font-size: 10px;
@@ -227,7 +247,7 @@
 
         input:focus, select:focus {
             border-color: var(--yellow);
-            box-shadow: 0 0 0 3px rgba(245,197,24,0.1);
+            box-shadow: 0 0 0 3px rgba(238, 223, 122, 0.1);
         }
 
         .input-wrap:focus-within .icon { stroke: var(--yellow); }
@@ -355,6 +375,11 @@
     <!-- Left Form Panel -->
     <div class="form-panel">
         <div class="form-header">
+            <!-- Back to Home Button -->
+            <a href="{{ route('home') }}" class="back-btn">
+                <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Back to Home
+            </a>
             <p class="form-eyebrow">New Account</p>
             <h2 class="form-title">Create Account</h2>
             <p class="form-subtitle">Join RYB and start browsing our fleet</p>
@@ -492,7 +517,8 @@ function checkStrength(val) {
 
     const cls = score <= 1 ? 'weak' : score <= 2 ? 'medium' : 'strong';
     const labels = ['', 'Weak', 'Weak', 'Medium', 'Strong'];
-    const colors = { weak: '#e74c3c', medium: '#f5c518', strong: '#2ecc71' };
+    // Updated medium color map to match UI scheme
+    const colors = { weak: '#e74c3c', medium: '#EEDF7A', strong: '#2ecc71' };
 
     for (let i = 0; i < score; i++) segs[i].classList.add(cls);
     label.textContent = labels[score];

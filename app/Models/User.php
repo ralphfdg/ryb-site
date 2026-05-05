@@ -13,13 +13,15 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes, HasUuids, HasRoles;
 
-    // By default, HasUuids assumes the primary key is 'id', which matches our migration.
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     protected $fillable = [
         'name',
         'email',
         'password',
         'phone_number',
+        'role',
     ];
 
     protected $hidden = [

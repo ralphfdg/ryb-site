@@ -30,7 +30,9 @@ Route::get('/about', [PublicPageController::class, 'about'])->name('about');
 Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact');
 
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
+Route::get('/catalog/compare', [CatalogController::class, 'compare'])->name('catalog.compare');
 Route::get('/catalog/{car}', [CatalogController::class, 'show'])->name('catalog.show');
+
 
 
 /*

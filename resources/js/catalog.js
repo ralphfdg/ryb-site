@@ -1,38 +1,53 @@
-// resources/js/catalog.js
-
 export default function catalogFilter() {
     return {
-        isSearching: false, // Optional: useful for loading spinners if you want them later
+        isSearching: false,
+        compareList: [], // Tracks selected car IDs
+        maxCompare: 3,
+
+        toggleCompare(carId) {
+            const index = this.compareList.indexOf(carId);
+            if (index > -1) {
+                // Remove if already selected
+                this.compareList.splice(index, 1);
+            } else {
+                // Add if under limit
+                if (this.compareList.length < this.maxCompare) {
+                    this.compareList.push(carId);
+                } else {
+                    alert('You can only compare up to 3 vehicles at a time.');
+                }
+            }
+        },
+
+        goToCompare() {
+            if (this.compareList.length < 2) return;
+            
+            // Build the query string manually for the array (e.g., ?cars[]=1&cars[]=2)
+            const params = new URLSearchParams();
+            this.compareList.forEach(id => params.append('cars[]', id));
+            
+            window.location.href = `/catalog/compare?${params.toString()}`;
+        },
         
         submitForm() {
             this.isSearching = true;
             
-            // 1. Get the form and its current data
             const form = this.$refs.filterForm;
             const url = new URL(form.action);
             const formData = new FormData(form);
             
-            // 2. Build the query string (e.g., ?filter[model_name]=Mustang)
             const searchParams = new URLSearchParams(formData);
             url.search = searchParams.toString();
 
-            // 3. Update the browser's address bar without reloading
             window.history.pushState({}, '', url);
 
-            // 4. Fetch the new data asynchronously
             fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest' // Standard Laravel AJAX header
-                }
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
             .then(response => response.text())
             .then(html => {
-                // 5. Parse the returned HTML
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
-
-                // 6. Swap ONLY the grid content. 
-                // This preserves the sidebar and keeps the cursor focused in the search bar!
                 document.getElementById('catalog-main-content').innerHTML = doc.getElementById('catalog-main-content').innerHTML;
             })
             .finally(() => {

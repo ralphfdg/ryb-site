@@ -14,9 +14,9 @@
             --red:     #c0392b;
             --red-bright: #e74c3c;
             --offwhite: #f5ede8;
-            --yellow:  #f5c518;
+            --yellow:  #EEDF7A; /* Synchronized branding hex */
             --glass-bg: rgba(46,40,40,0.55);
-            --glass-border: rgba(245,197,24,0.18);
+            --glass-border: rgba(238, 223, 122, 0.18);
             --text-muted: rgba(245,237,232,0.5);
         }
 
@@ -38,7 +38,7 @@
             position: fixed; inset: 0;
             background:
                 radial-gradient(ellipse 80% 60% at 15% 20%, rgba(192,57,43,0.18) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 80% at 85% 75%, rgba(245,197,24,0.08) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 80% at 85% 75%, rgba(238, 223, 122, 0.08) 0%, transparent 55%),
                 radial-gradient(ellipse 100% 100% at 50% 50%, #0a0a0a 0%, #1a1414 100%);
             z-index: 0;
         }
@@ -72,7 +72,7 @@
             flex-direction: column;
             justify-content: center;
             padding: 60px 70px;
-            border-right: 1px solid rgba(245,197,24,0.1);
+            border-right: 1px solid rgba(238, 223, 122, 0.1);
             animation: slideInLeft 0.8s cubic-bezier(0.22,1,0.36,1) both;
         }
 
@@ -158,6 +158,27 @@
             margin-bottom: 40px;
         }
 
+        /* Added Back Button Styles */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover { color: var(--yellow); }
+
+        .back-btn svg {
+            width: 16px; height: 16px;
+            stroke: currentColor; stroke-width: 2; fill: none;
+            stroke-linecap: round; stroke-linejoin: round;
+        }
+
         .form-eyebrow {
             font-size: 10px;
             letter-spacing: 3px;
@@ -196,23 +217,10 @@
 
         .input-wrap {
             position: relative;
+            display: flex; flex-direction: row-reverse; align-items: center;
         }
 
-        .input-wrap svg {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px; height: 16px;
-            stroke: var(--text-muted);
-            fill: none;
-            pointer-events: none;
-            transition: stroke 0.2s;
-        }
-
-        input[type="email"],
-        input[type="password"],
-        input[type="text"] {
+        .input-wrap input {
             width: 100%;
             background: rgba(10,10,10,0.6);
             border: 1px solid rgba(245,237,232,0.12);
@@ -223,23 +231,28 @@
             font-size: 14px;
             transition: border-color 0.2s, box-shadow 0.2s;
             outline: none;
+            flex: 1;
+        }
+
+        .input-wrap svg {
+            position: absolute;
+            left: 14px;
+            width: 16px; height: 16px;
+            stroke: var(--text-muted);
+            fill: none;
+            pointer-events: none;
+            transition: stroke 0.2s;
         }
 
         input:focus {
             border-color: var(--yellow);
-            box-shadow: 0 0 0 3px rgba(245,197,24,0.1);
+            box-shadow: 0 0 0 3px rgba(238, 223, 122, 0.1);
         }
 
         input:focus + svg,
         .input-wrap:focus-within svg {
             stroke: var(--yellow);
         }
-
-        .input-wrap svg { order: 2; } /* hack — svg is after input in DOM */
-        /* Re-order: input first, svg after */
-        .input-wrap { display: flex; flex-direction: row-reverse; align-items: center; }
-        .input-wrap input { flex: 1; }
-        .input-wrap svg { position: absolute; left: 14px; }
 
         .form-options {
             display: flex;
@@ -345,6 +358,7 @@
             font-size: 13px;
             margin-bottom: 20px;
             border-left: 3px solid;
+            display: none;
         }
 
         .alert-error {
@@ -352,9 +366,6 @@
             border-color: var(--red);
             color: #ff8a80;
         }
-
-        /* if ($errors->any()) display block else none */
-        .alert { display: none; }
 
         @media (max-width: 900px) {
             .brand-panel { display: none; }
@@ -396,6 +407,11 @@
     <!-- Right Form -->
     <div class="form-panel">
         <div class="form-header">
+            <!-- Back to Home Button -->
+            <a href="{{ route('home') }}" class="back-btn">
+                <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Back to Home
+            </a>
             <p class="form-eyebrow">Welcome Back</p>
             <h2 class="form-title">Sign In</h2>
             <p class="form-subtitle">Access your account and saved vehicles</p>
