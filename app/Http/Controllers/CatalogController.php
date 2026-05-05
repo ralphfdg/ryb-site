@@ -42,6 +42,15 @@ class CatalogController extends Controller
         }
 
         $car->load(['brand', 'carType', 'carSpecification', 'media']);
+
+        // Query all future appointments that are locked in (Approved, Viewed, Committed)
+        // We format them to 'Y-m-d H:i' to match the JavaScript comparison perfectly.
+        $bookedSlots = \App\Models\Appointment::whereIn('status', ['Approved', 'Viewed', 'Committed'])
+            ->where('scheduled_at', '>=', now())
+            ->pluck('scheduled_at')
+            ->map(fn ($date) => \Carbon\Carbon::parse($date)->format('Y-m-d H:i'))
+            ->toArray();
+
         return view('catalog.show', compact('car'));
     }
 

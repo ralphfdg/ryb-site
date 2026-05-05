@@ -1,40 +1,38 @@
 <?php
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Appointment;
+use Closure;
 
 class StoreAppointmentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        // Spatie RBAC ensures only customers hit this route, 
-        // but we double-check that the user is authenticated.
-        return auth()->check();
+        // Enforce strict Role-Based Access Control
+        return auth()->check() && auth()->user()->hasRole('Customer');
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
     public function rules(): array
     {
         return [
-            // Ensure the car exists and is actually available for booking
-            'car_id' => [
+            'car_id' => ['required', 'exists:cars,id'],
+            'scheduled_at' => [
                 'required', 
-                'exists:cars,id',
-                // Custom rule to prevent booking sold/reserved cars
-                function ($attribute, $value, $fail) {
-                    $car = \App\Models\Car::find($value);
-                    if ($car && $car->status !== 'Available') {
-                        $fail('This vehicle is currently not available for viewing.');
+                'date', 
+                'after:now',
+                // Laravel Closure to check MySQL for double-booking conflicts
+                function (string $attribute, mixed $value, Closure $fail) {
+                    $isTaken = Appointment::where('scheduled_at', $value)
+                        ->whereIn('status', ['Approved', 'Viewed', 'Committed'])
+                        ->exists();
+
+                    if ($isTaken) {
+                        $fail('This specific time slot has just been confirmed for another customer. Please choose a different time.');
                     }
                 },
             ],
-            // Ensure the date is in the future
-            'scheduled_at' => ['required', 'date', 'after:now'],
         ];
     }
 }

@@ -42,6 +42,18 @@ Route::get('/catalog/{car}', [CatalogController::class, 'show'])->name('catalog.
 */
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+    // Inquiries
+    Route::post('/inquiries', [ContactController::class, 'storeInquiry'])->name('inquiries.store');
+
+    // Appointments (Dashboard Prefix)
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+        Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+    });
 });
 
 
@@ -77,25 +89,6 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     
     // Route to finalize the sale (Phase 2, Step 5)
     Route::post('/sales', [App\Http\Controllers\Admin\SaleController::class, 'store'])->name('sales.store');
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| Customer Portal Routes
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:Customer'])->prefix('dashboard')->name('dashboard.')->group(function () {
-    
-    // Appointments
-    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
-    Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
-
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 });
 
 // Laravel Breeze auth routes

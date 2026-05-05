@@ -4,10 +4,12 @@ import './home';
 import Alpine from 'alpinejs';
 import Swiper from 'swiper/bundle';
 import catalogFilter from './catalog';
+import appointmentScheduler from './appointmentScheduler';
 
 window.Alpine = Alpine;
 
 Alpine.data('catalogFilter', catalogFilter);
+Alpine.data('appointmentScheduler', appointmentScheduler);
 
 Alpine.start();
 
