@@ -3,8 +3,12 @@ import './home';
 
 import Alpine from 'alpinejs';
 import Swiper from 'swiper/bundle';
+import catalogFilter from './catalog';
 
 window.Alpine = Alpine;
+
+Alpine.data('catalogFilter', catalogFilter);
+
 Alpine.start();
 
 // Initialize Swiper only if the gallery elements exist on the page

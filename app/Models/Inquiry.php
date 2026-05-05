@@ -1,12 +1,21 @@
 <?php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inquiry extends Model
 {
-    protected $guarded = ['id'];
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'car_id',
+        'subject',
+        'message',
+        'status',
+    ];
 
     /**
      * The user who made the inquiry (Nullable for guest traffic).

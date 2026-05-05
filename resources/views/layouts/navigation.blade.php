@@ -13,6 +13,7 @@
                 <a href="{{ route('home') }}" class="text-ryb-light hover:text-white transition">Home</a>
                 <a href="{{ route('catalog.index') }}" class="text-ryb-light hover:text-white transition">Catalog</a>
                 <a href="{{ route('about') }}" class="text-ryb-light hover:text-white transition">About</a>
+                <a href="{{ route('contact.index') }}" class="text-ryb-light hover:text-white transition">Contact</a>
                 
                 @guest
                     {{-- Shown ONLY to visitors not logged in --}}
@@ -26,10 +27,6 @@
                     @if(auth()->user()->hasRole('Admin'))
                         <a href="{{ route('admin.dashboard') }}" class="px-5 py-2 bg-ryb-dark text-white font-bold rounded-lg hover:bg-ryb-muted transition border border-ryb-muted">
                             Admin Portal
-                        </a>
-                    @else
-                        <a href="{{ route('customer.dashboard') }}" class="px-5 py-2 bg-ryb-dark text-white font-bold rounded-lg hover:bg-ryb-muted transition border border-ryb-muted">
-                            My Dashboard
                         </a>
                     @endif
 

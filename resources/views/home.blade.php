@@ -6,7 +6,7 @@
         {{-- ===== HERO SECTION (Base Level) ===== --}}
         <div class="relative h-[85vh] flex items-center justify-center overflow-hidden bg-ryb-darker">
             <div class="absolute inset-0 z-0">
-                <img src="https://placehold.co/1920x1080/09090b/18181b" alt="Showroom Background"
+                <img src="{{ asset('images/home/home-01.jpg') }}" alt="Showroom Background"
                     class="w-full h-full object-cover opacity-50 mix-blend-luminosity">
                 <div class="absolute inset-0 bg-gradient-to-t from-ryb-darker via-ryb-darker/60 to-transparent"></div>
             </div>

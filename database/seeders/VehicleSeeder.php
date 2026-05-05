@@ -26,7 +26,7 @@ class VehicleSeeder extends Seeder
             if (!isset($models[$brand->brand_name])) continue;
 
             foreach ($models[$brand->brand_name] as $modelName) {
-                // 1. Create the Car
+                // 1. Create the Car (Aligned strictly with the provided DB schema image)
                 $car = Car::create([
                     'brand_id' => $brand->id,
                     'model_name' => $modelName,
@@ -35,7 +35,8 @@ class VehicleSeeder extends Seeder
                     'mileage' => rand(0, 15000),
                     'transmission' => collect(['Automatic', 'Manual'])->random(),
                     'fuel_type' => collect(['Gasoline', 'Electric', 'Hybrid'])->random(),
-                    'description' => "This $modelName is a premium vehicle offering top-tier performance and glassmorphism-inspired luxury interiors.",
+                    'previous_owners' => rand(0, 2),
+                    'plate_ending' => rand(0, 9),
                     'features' => [
                         'Adaptive Cruise Control',
                         'Panoramic Sunroof',
@@ -43,6 +44,7 @@ class VehicleSeeder extends Seeder
                         'Apple CarPlay / Android Auto'
                     ],
                     'status' => 'Available',
+                    'is_featured' => rand(0, 10) > 8 ? 1 : 0, // 20% chance to be featured
                 ]);
 
                 // 2. Create the 1:1 Specification

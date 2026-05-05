@@ -6,7 +6,7 @@
     {{-- ===== HERO SECTION (Base Level) ===== --}}
     <div class="relative h-[50vh] flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="https://placehold.co/1920x1080/09090b/18181b?text=RYB+Dealership+Exterior" alt="RYB Dealership" class="w-full h-full object-cover opacity-40 mix-blend-luminosity">
+            <img src="{{ asset('images/about/about-03.jpg') }}" alt="RYB Dealership" class="w-full h-full object-cover opacity-40 mix-blend-luminosity">
             <div class="absolute inset-0 bg-gradient-to-t from-ryb-darker via-ryb-darker/80 to-transparent"></div>
         </div>
 
@@ -37,10 +37,10 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="bg-ryb-dark border border-ryb-muted rounded-2xl overflow-hidden mt-8 shadow-lg shadow-black/50">
-                    <img src="https://placehold.co/600x800/18181b/27272a?text=Handshake" alt="Customer Service" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition duration-500">
+                    <img src="{{ asset('images/about/about-01.jpg') }}" alt="Customer Service" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition duration-500">
                 </div>
                 <div class="bg-ryb-dark border border-ryb-muted rounded-2xl overflow-hidden mb-8 shadow-lg shadow-black/50">
-                    <img src="https://placehold.co/600x800/18181b/27272a?text=Steering+Wheel" alt="Premium Interior" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition duration-500">
+                    <img src="{{ asset('images/about/about-02.jpeg') }}" alt="Premium Interior" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition duration-500">
                 </div>
             </div>
 

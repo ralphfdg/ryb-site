@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\SaleController;
 
 // Customer Controllers
 use App\Http\Controllers\Customer\AppointmentController;
+use App\Http\Controllers\ContactController;
 
 
 /*
@@ -88,6 +89,11 @@ Route::middleware(['auth', 'role:Customer'])->prefix('dashboard')->name('dashboa
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
 
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 });
 
 // Laravel Breeze auth routes
