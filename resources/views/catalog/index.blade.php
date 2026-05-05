@@ -98,7 +98,7 @@
 
                         {{-- Image + Status Badge --}}
                         <div class="relative aspect-[4/3] overflow-hidden bg-ryb-darker border-b border-ryb-muted/50">
-                            <img src="{{ $car->getFirstMediaUrl('images') ?: 'https://placehold.co/600x400/09090b/27272a?text=Vehicle' }}" alt="{{ $car->brand->brand_name ?? 'Car' }}"
+                            <img src="{{ $car->getFirstMediaUrl('car_gallery') ?: 'https://placehold.co/600x400/09090b/27272a?text=Vehicle' }}" alt="{{ $car->brand->brand_name ?? 'Car' }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100">
 
                             @if($car->status === 'Available')

@@ -57,7 +57,7 @@ class CarController extends Controller
                 // 3. Handle Media Library Uploads
                 if ($request->hasFile('images')) {
                     foreach ($request->file('images') as $image) {
-                        $car->addMedia($image)->toMediaCollection('car_images');
+                        $car->addMedia($image)->toMediaCollection('car_gallery');
                     }
                 }
             });

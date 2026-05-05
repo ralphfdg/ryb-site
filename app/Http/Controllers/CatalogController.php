@@ -18,12 +18,12 @@ class CatalogController extends Controller
         $cars = QueryBuilder::for(Car::class)
             ->allowedFilters([
                 'status',
-                'price',
+                AllowedFilter::callback('price', fn ($query, $value) => $query->where('price', '<=', $value)),
                 AllowedFilter::exact('brand_id'),
                 // Custom filters for features JSON can be added here later
             ])
             ->allowedSorts(['price', 'created_at'])
-            ->with('brand') // Eager load the brand relationship to prevent N+1 performance bottlenecks
+            ->with(['brand', 'media']) // Eager load the brand and media to prevent N+1
             ->paginate(12);
 
         // Pass the query results to the Blade view
@@ -35,8 +35,8 @@ class CatalogController extends Controller
      */
     public function show(Car $car): View
     {
-        // Ensure the car is loaded with its specifications
-        $car->load(['brand', 'specification']);
+        // Ensure the car is loaded with its specifications and media
+        $car->load(['brand', 'specification', 'media']);
         
         return view('catalog.show', compact('car'));
     }

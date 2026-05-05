@@ -17,7 +17,7 @@
                 {{-- Main Image --}}
                 <div class="swiper mySwiper2 rounded-2xl overflow-hidden border border-ryb-muted shadow-2xl shadow-black/80 aspect-[4/3] bg-ryb-dark">
                     <div class="swiper-wrapper">
-                        @forelse($car->getMedia('images') as $image)
+                        @forelse($car->getMedia('car_gallery') as $image)
                             <div class="swiper-slide">
                                 <img src="{{ $image->getUrl() }}" class="w-full h-full object-cover" />
                             </div>
@@ -34,7 +34,7 @@
                 {{-- Thumbnails --}}
                 <div class="swiper mySwiper h-24">
                     <div class="swiper-wrapper">
-                        @foreach($car->getMedia('images') as $image)
+                        @foreach($car->getMedia('car_gallery') as $image)
                             <div class="swiper-slide rounded-lg overflow-hidden border border-ryb-muted cursor-pointer opacity-60 hover:opacity-100 transition">
                                 <img src="{{ $image->getUrl('thumb') ?? $image->getUrl() }}" class="w-full h-full object-cover" />
                             </div>
@@ -49,7 +49,7 @@
                     <div class="flex justify-between items-start mb-2">
                         <h1 class="text-3xl md:text-4xl font-bold text-white">
                             {{ $car->brand->brand_name ?? 'Premium Vehicle' }} 
-                            <span class="text-ryb-light/70 font-medium text-2xl">{{ $car->features['model'] ?? '' }}</span>
+                            <span class="text-ryb-light/70 font-medium text-2xl">{{ $car->model_name }}</span>
                         </h1>
                         @if($car->status === 'Available')
                             <span class="px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full text-xs font-bold uppercase tracking-wider">Available</span>
@@ -107,7 +107,7 @@
         {{-- ===== INQUIRY FORM SECTION (Guest-First) ===== --}}
         <div id="inquiry-form" class="mt-20 max-w-3xl mx-auto bg-ryb-dark border border-ryb-muted rounded-3xl p-8 md:p-12 shadow-2xl">
             <h2 class="text-2xl font-bold text-white mb-2 text-center">Send an Inquiry</h2>
-            <p class="text-ryb-light/60 text-center mb-8">Ref: {{ $car->brand->brand_name }} {{ $car->features['model'] ?? '' }} (VIN: {{ $car->specification->vin_number ?? 'N/A' }})</p>
+            <p class="text-ryb-light/60 text-center mb-8">Ref: {{ $car->brand->brand_name }} {{ $car->model_name }} (VIN: {{ $car->specification->vin_number ?? 'N/A' }})</p>
 
             <form action="#" method="POST" class="space-y-6">
                 @csrf
@@ -129,7 +129,7 @@
                 <div>
                     <label class="block text-sm font-medium text-ryb-light/70 mb-2">Message</label>
                     <textarea name="message" rows="4" required
-                        class="w-full bg-ryb-darker border border-ryb-muted text-ryb-light rounded-lg focus:ring-ryb-red focus:border-ryb-red px-4 py-3 outline-none transition resize-none">I am interested in the {{ $car->brand->brand_name }} {{ $car->features['model'] ?? '' }} listed for ${{ number_format($car->price) }}. Please provide me with more details.</textarea>
+                        class="w-full bg-ryb-darker border border-ryb-muted text-ryb-light rounded-lg focus:ring-ryb-red focus:border-ryb-red px-4 py-3 outline-none transition resize-none">I am interested in the {{ $car->brand->brand_name }} {{ $car->model_name }} listed for ${{ number_format($car->price) }}. Please provide me with more details.</textarea>
                 </div>
 
                 <button type="submit" class="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-gray-200 transition shadow-md text-lg">

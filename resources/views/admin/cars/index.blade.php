@@ -39,8 +39,8 @@
                     @forelse($cars as $car)
                     <tr class="hover:bg-[#151515] transition-colors">
                         <td class="px-4 py-4">
-                            @if($car->hasMedia('car_images'))
-                                <img src="{{ $car->getFirstMediaUrl('car_images') }}" alt="{{ $car->model_name }}" class="w-16 h-10 object-cover rounded border border-[#333]">
+                            @if($car->hasMedia('car_gallery'))
+                                <img src="{{ $car->getFirstMediaUrl('car_gallery') }}" alt="{{ $car->model_name }}" class="w-16 h-10 object-cover rounded border border-[#333]">
                             @else
                                 <div class="w-16 h-10 bg-[#1a1a1a] rounded text-[8px] text-[#666666] flex items-center justify-center border border-[#333]">NO IMG</div>
                             @endif
