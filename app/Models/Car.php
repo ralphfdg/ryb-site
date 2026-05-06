@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 
 class Car extends Model implements HasMedia
 {
@@ -16,12 +18,11 @@ class Car extends Model implements HasMedia
     protected $guarded = ['id'];
 
     // Cast the JSON features column to an array automatically
-    protected function casts(): array
-    {
-        return [
-            'features' => 'array',
-        ];
-    }
+    protected $casts = [
+        'features' => AsArrayObject::class, // This tells Laravel to auto-decode the JSON
+        'price' => 'decimal:2',
+        'is_featured' => 'boolean',
+    ];
 
     /**
      * Relationship: A Car belongs to a Brand.
@@ -43,5 +44,14 @@ class Car extends Model implements HasMedia
     public function carType()
     {
         return $this->belongsTo(CarType::class);
+    }
+
+    // Optional: Define specific media conversions (e.g., thumbnails for the catalog)
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+              ->width(300)
+              ->height(300)
+              ->sharpen(10);
     }
 }

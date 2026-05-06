@@ -13,18 +13,37 @@ use Illuminate\View\View;
 class AppointmentController extends Controller
 {
     /**
-     * Display a paginated listing of the customer's appointments.
+     * Display a unified listing of the customer's appointments and inquiries.
      */
     public function index(): View
     {
-        // Eager load the car and its brand to prevent N+1 queries in the view.
-        // Replaced ->get() with ->paginate() for better memory management.
+        // Fetch appointments with specific pagination name to prevent page number conflicts
         $appointments = auth()->user()->appointments()
             ->with(['car.brand']) 
             ->orderBy('scheduled_at', 'desc')
-            ->paginate(10);
+            ->paginate(5, ['*'], 'appointments_page');
 
-        return view('customer.appointments.index', compact('appointments'));
+        // Fetch inquiries
+        $inquiries = auth()->user()->inquiries()
+            ->with(['car.brand'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(5, ['*'], 'inquiries_page');
+
+        return view('customer.appointments.index', compact('appointments', 'inquiries'));
+    }
+
+    /**
+     * Display the specified appointment summary.
+     */
+    public function show(Appointment $appointment): View
+    {
+        // Security Gate: Ensure the logged-in user actually owns this appointment
+        abort_if($appointment->user_id !== auth()->id(), 403, 'Unauthorized Access');
+
+        // Eager load relations
+        $appointment->load(['car.brand', 'car.carSpecification']);
+
+        return view('customer.appointments.show', compact('appointment'));
     }
 
     /**

@@ -6,10 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\Sale;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -19,36 +17,35 @@ class DashboardController extends Controller
         $totalCars = Car::count();
         $availableCars = Car::where('status', 'Available')->count();
         $soldCars = Car::where('status', 'Sold')->count();
-        $totalCustomers = User::role('Customer')->count(); // Using Spatie Permission
+        $totalCustomers = User::role('Customer')->count(); // Spatie Role-Based mapping[cite: 1]
         $totalSales = Sale::sum('sale_price');
 
-        // Calculate Percentages safely to avoid division by zero
+        // 2. Safe percentage calculations to prevent DivisionByZeroError
         $availablePercentage = $totalCars > 0 ? round(($availableCars / $totalCars) * 100) : 0;
         $soldPercentage = $totalCars > 0 ? round(($soldCars / $totalCars) * 100) : 0;
 
-        // 2. Chart Data: Monthly Sales for Current Year
+        // 3. Chart.js Data Generation[cite: 1]
         $currentYear = now()->year;
         $salesData = Sale::select(
-                DB::raw('MONTH(sale_date) as month'),
+                DB::raw('MONTH(created_at) as month'),
                 DB::raw('SUM(sale_price) as total')
             )
-            ->whereYear('sale_date', $currentYear)
+            ->whereYear('created_at', $currentYear)
             ->groupBy('month')
             ->pluck('total', 'month')
             ->toArray();
 
-        // Fill missing months with 0
         $monthlySales = [];
         for ($i = 1; $i <= 12; $i++) {
             $monthlySales[] = $salesData[$i] ?? 0;
         }
 
-        // 3. Recent Inventory Table (Eager loading 'brand' to prevent N+1 query issues)
+        // 4. Eager load relationships to prevent N+1 queries
         $recentCars = Car::with(['brand', 'media'])->latest()->take(5)->get();
 
         return view('admin.dashboard', compact(
             'totalCars', 'availableCars', 'soldCars', 'totalCustomers', 
-            'totalSales', 'availablePercentage', 'soldPercentage', 
+            'totalSales', 'availablePercentage', 'soldPercentage', // <-- Re-added here
             'monthlySales', 'recentCars', 'currentYear'
         ));
     }

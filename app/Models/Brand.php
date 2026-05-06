@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -19,11 +20,9 @@ class Brand extends Model implements HasMedia
         return $this->hasMany(Car::class);
     }
 
-    // Define the specific collection for logos
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('brand_logos')
-             ->singleFile() // Ensures a brand only ever has one active logo
-             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']);
+            ->singleFile();
     }
 }

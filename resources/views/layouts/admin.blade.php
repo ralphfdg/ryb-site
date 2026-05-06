@@ -16,30 +16,32 @@
         </div>
 
         <!-- Navigation Links -->
-        <nav class="flex-1 px-4 space-y-2 overflow-y-auto pt-8">
-            <p class="px-4 text-[10px] text-[#333] font-bold tracking-[0.2em] uppercase mb-4">Main Navigation</p>
+        <nav class="flex-1 px-4 space-y-2 overflow-y-auto pt-8 scrollbar-hide">
+            
+            <p class="px-4 text-[10px] text-[#333] font-bold tracking-[0.2em] uppercase mb-4">Main</p>
             
             <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3 rounded-lg border {{ request()->routeIs('admin.dashboard') ? 'bg-[#e52a2a]/10 text-white border-[#e52a2a]/20' : 'border-transparent text-gray-500 hover:text-white hover:bg-[#1a1a1a]/50 transition-all' }}">
                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                <span class="text-xs font-semibold tracking-wide">Dashboard</span>
+                <span class="text-xs font-semibold tracking-wide">Analytics Overview</span>
             </a>
 
-            <!-- Using wildcards (*) so the tab stays active when viewing or editing a car -->
+            <p class="px-4 text-[10px] text-[#333] font-bold tracking-[0.2em] uppercase mt-6 mb-4">Catalog</p>
+
+            <a href="{{ route('admin.brands.index') }}" class="flex items-center px-4 py-3 rounded-lg border {{ request()->routeIs('admin.brands.*') ? 'bg-[#e52a2a]/10 text-white border-[#e52a2a]/20' : 'border-transparent text-gray-500 hover:text-white hover:bg-[#1a1a1a]/50 transition-all' }}">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                <span class="text-xs font-semibold tracking-wide">Brand Manager</span>
+            </a>
+
             <a href="{{ route('admin.cars.index') }}" class="flex items-center px-4 py-3 rounded-lg border {{ request()->routeIs('admin.cars.*') ? 'bg-[#e52a2a]/10 text-white border-[#e52a2a]/20' : 'border-transparent text-gray-500 hover:text-white hover:bg-[#1a1a1a]/50 transition-all' }}">
                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                <span class="text-xs font-semibold tracking-wide">Inventory</span>
+                <span class="text-xs font-semibold tracking-wide">Inventory Manager</span>
             </a>
 
-            <a href="{{ route('admin.sales.index') }}" class="flex items-center px-4 py-3 rounded-lg border {{ request()->routeIs('admin.sales.*') ? 'bg-[#e52a2a]/10 text-white border-[#e52a2a]/20' : 'border-transparent text-gray-500 hover:text-white hover:bg-[#1a1a1a]/50 transition-all' }}">
-                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                <span class="text-xs font-semibold tracking-wide">Sales</span>
-            </a>
+            <p class="px-4 text-[10px] text-[#333] font-bold tracking-[0.2em] uppercase mt-6 mb-4">Operations Hub</p>
 
-            <p class="px-4 text-[10px] text-[#333] font-bold tracking-[0.2em] uppercase mt-6 mb-4">People</p>
-
-            <a href="{{ route('admin.customers.index') }}" class="flex items-center px-4 py-3 rounded-lg border {{ request()->routeIs('admin.customers.*') ? 'bg-[#e52a2a]/10 text-white border-[#e52a2a]/20' : 'border-transparent text-gray-500 hover:text-white hover:bg-[#1a1a1a]/50 transition-all' }}">
-                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <span class="text-xs font-semibold tracking-wide">Customers</span>
+            <a href="{{ route('admin.appointments.index') }}" class="flex items-center px-4 py-3 rounded-lg border {{ request()->routeIs('admin.appointments.*') ? 'bg-[#e52a2a]/10 text-white border-[#e52a2a]/20' : 'border-transparent text-gray-500 hover:text-white hover:bg-[#1a1a1a]/50 transition-all' }}">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <span class="text-xs font-semibold tracking-wide">Appointment Hub</span>
             </a>
 
             <a href="{{ route('admin.inquiries.index') }}" class="flex items-center justify-between px-4 py-3 rounded-lg border {{ request()->routeIs('admin.inquiries.*') ? 'bg-[#e52a2a]/10 text-white border-[#e52a2a]/20' : 'border-transparent text-gray-500 hover:text-white hover:bg-[#1a1a1a]/50 transition-all' }}">
@@ -49,18 +51,32 @@
                 </div>
                 <!-- Dynamic Pending Inquiries Count -->
                 @php
-                    $pendingInquiries = \App\Models\Inquiry::where('status', 'New')->count();
+                    // Adjust 'status' based on your precise data dictionary (e.g., 'New', 'Pending', or 'Unread')
+                    $pendingInquiries = \App\Models\Inquiry::where('status', 'Pending')->count();
                 @endphp
                 @if($pendingInquiries > 0)
                     <span class="w-4 h-4 rounded-full bg-[#e52a2a] text-white text-[9px] flex items-center justify-center font-bold">{{ $pendingInquiries }}</span>
                 @endif
             </a>
+
+            <a href="{{ route('admin.sales.index') }}" class="flex items-center px-4 py-3 rounded-lg border {{ request()->routeIs('admin.sales.*') ? 'bg-[#e52a2a]/10 text-white border-[#e52a2a]/20' : 'border-transparent text-gray-500 hover:text-white hover:bg-[#1a1a1a]/50 transition-all' }}">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                <span class="text-xs font-semibold tracking-wide">Sales Ledger</span>
+            </a>
+
+            <p class="px-4 text-[10px] text-[#333] font-bold tracking-[0.2em] uppercase mt-6 mb-4">Directory</p>
+
+            <a href="{{ route('admin.customers.index') }}" class="flex items-center px-4 py-3 rounded-lg border {{ request()->routeIs('admin.customers.*') ? 'bg-[#e52a2a]/10 text-white border-[#e52a2a]/20' : 'border-transparent text-gray-500 hover:text-white hover:bg-[#1a1a1a]/50 transition-all' }}">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <span class="text-xs font-semibold tracking-wide">Customers</span>
+            </a>
+
         </nav>
 
         <!-- Dynamic User Profile Section -->
         <div class="p-6 border-t border-[#1a1a1a] flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3">
-                <!-- Grabs the first letter of the authenticated user's name -->
+                <!-- Grabs the first letter of the authenticated user's name safely -->
                 <div class="w-8 h-8 rounded bg-[#e52a2a] flex items-center justify-center text-white text-[10px] font-bold">
                     {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
                 </div>
