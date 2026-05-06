@@ -75,16 +75,15 @@
 
         <!-- Dynamic User Profile Section -->
         <div class="p-6 border-t border-[#1a1a1a] flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-3">
-                <!-- Grabs the first letter of the authenticated user's name safely -->
-                <div class="w-8 h-8 rounded bg-[#e52a2a] flex items-center justify-center text-white text-[10px] font-bold">
+            <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-3 group cursor-pointer" title="Edit Profile">
+                <div class="w-8 h-8 rounded bg-[#e52a2a] flex items-center justify-center text-white text-[10px] font-bold group-hover:bg-white group-hover:text-[#e52a2a] transition-colors duration-300">
                     {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
                 </div>
                 <div>
-                    <p class="text-[11px] font-bold text-white uppercase tracking-wider">{{ auth()->user()->name ?? 'Admin' }}</p>
+                    <p class="text-[11px] font-bold text-white uppercase tracking-wider group-hover:text-[#e52a2a] transition-colors duration-300">{{ auth()->user()->name ?? 'Admin' }}</p>
                     <p class="text-[9px] text-[#444] uppercase font-bold">{{ auth()->user()->getRoleNames()->first() ?? 'Staff' }}</p>
                 </div>
-            </div>
+            </a>
             
             <!-- Secure Logout Form -->
             <form method="POST" action="{{ route('logout') }}">

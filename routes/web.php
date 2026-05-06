@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\AdminProfileController;
 
 // Customer Controllers
 use App\Http\Controllers\Customer\AppointmentController;
@@ -42,14 +43,15 @@ Route::get('/catalog/{car}', [CatalogController::class, 'show'])->name('catalog.
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-
     Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
     Route::post('/contact', [ContactController::class, 'storeGeneral'])->name('contact.store');
     Route::post('/inquiries', [ContactController::class, 'storeVehicle'])->name('inquiries.store');
 
     // Appointments (Dashboard Prefix)
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
         Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
         Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
         Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
@@ -78,10 +80,10 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/', [AdminAppointmentController::class, 'index'])->name('index');
         Route::get('/{appointment}', [AdminAppointmentController::class, 'show'])->name('show');
         
-        // Phase 2, Step 2: Approve Appointment
+        // Approve Appointment
         Route::patch('/{appointment}/approve', [AdminAppointmentController::class, 'approve'])->name('approve');
         
-        // Phase 2, Steps 3 & 4: Update Remarks, Negotiated Price, and Commitment Status
+        // Update Remarks, Negotiated Price, and Commitment Status
         Route::put('/{appointment}', [AdminAppointmentController::class, 'update'])->name('update');
     });
 
@@ -105,6 +107,10 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/', [CustomerController::class, 'index'])->name('index');
         Route::get('/{customer}', [CustomerController::class, 'show'])->name('show');
     });
+
+    // Admin Profile Management
+    Route::get('/profile', [AdminProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
 
 });
 
