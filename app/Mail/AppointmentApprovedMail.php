@@ -10,25 +10,23 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewAppointmentMail extends Mailable
+class AppointmentApprovedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(
-        public Appointment $appointment
-    ) {}
+    public function __construct(public Appointment $appointment) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Viewing Request: ' . $this->appointment->car->brand->brand_name . ' ' . $this->appointment->car->model_name,
+            subject: 'Viewing Request Approved: ' . $this->appointment->car->brand->brand_name,
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.admin.new-appointment',
+            markdown: 'emails.customer.appointment-approved',
         );
     }
 }

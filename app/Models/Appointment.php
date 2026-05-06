@@ -56,4 +56,14 @@ class Appointment extends Model
     {
         return $this->hasOne(Sale::class);
     }
+
+    protected static function booted()
+{
+    static::creating(function ($appointment) {
+        // Final integrity check: ensure the car isn't already Sold
+        if ($appointment->car->status === 'Sold') {
+            return false; // Aborts creation
+        }
+    });
+}
 }

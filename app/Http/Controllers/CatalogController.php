@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use App\Models\Brand;
 use App\Models\CarType;
+use App\Models\CarSpecification;
 use Illuminate\Http\Request;
+use App\Models\Appointment;
 use Illuminate\View\View;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -18,40 +21,64 @@ class CatalogController extends Controller
         $brands = Brand::all();
         $carTypes = CarType::all();
 
+        // Dynamically fetch unique values for the filters as requested
+        $filterOptions = [
+            'colors' => CarSpecification::distinct()->pluck('color_exterior')->filter(),
+            'engines' => CarSpecification::distinct()->pluck('engine_type')->filter(),
+            'fuels' => Car::distinct()->pluck('fuel_type')->filter(),
+            'transmissions' => Car::distinct()->pluck('transmission')->filter(),
+        ];
+
         $cars = QueryBuilder::for(Car::class)
-            ->where('status', 'Available') // Global scope enforcement
+            ->where('status', 'Available')
             ->allowedFilters([
                 AllowedFilter::partial('model_name'),
                 AllowedFilter::exact('brand_id'),
-                AllowedFilter::exact('car_type_id'), // The new shape filter
+                AllowedFilter::exact('car_type_id'),
                 AllowedFilter::exact('year'),
                 AllowedFilter::exact('transmission'),
+                AllowedFilter::exact('fuel_type'),
+                AllowedFilter::exact('plate_ending'),
+                // Filter mileage: finds cars with mileage less than or equal to input
+                AllowedFilter::callback('mileage', fn ($query, $value) => $query->where('mileage', '<=', $value)),
+                // Filter price: finds cars with price less than or equal to input
                 AllowedFilter::callback('price', fn ($query, $value) => $query->where('price', '<=', $value)),
+                // Relational filters for CarSpecifications
+                AllowedFilter::callback('color_exterior', function ($query, $value) {
+                    $query->whereHas('carSpecification', fn($q) => $q->where('color_exterior', $value));
+                }),
+                AllowedFilter::callback('engine_type', function ($query, $value) {
+                    $query->whereHas('carSpecification', fn($q) => $q->where('engine_type', $value));
+                }),
             ])
-            ->allowedSorts(['price', 'created_at'])
+            ->allowedSorts(['price', 'created_at', 'mileage', 'year'])
             ->with(['brand', 'carType', 'carSpecification', 'media'])
             ->paginate(12);
 
-        return view('catalog.index', compact('cars', 'brands', 'carTypes'));
+        return view('catalog.index', compact('cars', 'brands', 'carTypes', 'filterOptions'));
     }
 
+    /**
+     * Display the specified car and pass booked slots for the Alpine.js scheduler.
+     */
     public function show(Car $car): View
     {
-        if ($car->status !== 'Available') {
-            abort(404, 'This vehicle is no longer available in our public catalog.');
-        }
+        // 1. Eager load relations to prevent N+1 queries
+        $car->load(['brand', 'carSpecification', 'carType', 'media']);
 
-        $car->load(['brand', 'carType', 'carSpecification', 'media']);
-
-        // Query all future appointments that are locked in (Approved, Viewed, Committed)
-        // We format them to 'Y-m-d H:i' to match the JavaScript comparison perfectly.
-        $bookedSlots = \App\Models\Appointment::whereIn('status', ['Approved', 'Viewed', 'Committed'])
+        // 2. Fetch upcoming booked slots for THIS specific car
+        // We block 'Approved', 'Viewed', and 'Committed' to prevent double-booking
+        $bookedSlots = Appointment::where('car_id', $car->id)
+            ->whereIn('status', ['Approved', 'Viewed', 'Committed'])
             ->where('scheduled_at', '>=', now())
             ->pluck('scheduled_at')
-            ->map(fn ($date) => \Carbon\Carbon::parse($date)->format('Y-m-d H:i'))
+            ->map(function ($date) {
+                // Format to match Alpine.js expectation: "YYYY-MM-DD HH:MM"
+                return Carbon::parse($date)->format('Y-m-d H:i');
+            })
             ->toArray();
 
-        return view('catalog.show', compact('car'));
+        return view('catalog.show', compact('car', 'bookedSlots'));
     }
 
     public function compare(Request $request): View|RedirectResponse

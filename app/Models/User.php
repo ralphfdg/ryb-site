@@ -51,4 +51,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Inquiry::class);
     }
+
+    public function savedCars()
+{
+    // A user can save multiple cars. Matches our char(36) to bigint pivot.
+    return $this->belongsToMany(Car::class, 'wishlists')->withTimestamps();
+}
 }

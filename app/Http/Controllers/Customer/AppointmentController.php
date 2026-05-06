@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAppointmentRequest;
-use App\Models\Appointment;
 use App\Mail\NewAppointmentMail;
+use App\Mail\AppointmentCancelledMail;
+use App\Models\Appointment;
+use App\Models\Inquiry;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class AppointmentController extends Controller
 {
@@ -17,17 +21,34 @@ class AppointmentController extends Controller
      */
     public function index(): View
     {
-        // Fetch appointments with specific pagination name to prevent page number conflicts
-        $appointments = auth()->user()->appointments()
-            ->with(['car.brand']) 
-            ->orderBy('scheduled_at', 'desc')
-            ->paginate(5, ['*'], 'appointments_page');
+        $userId = auth()->id();
 
-        // Fetch inquiries
-        $inquiries = auth()->user()->inquiries()
+        // Spatie Query Builder for Appointments
+        // URL Example: /dashboard/appointments?filter[status]=Approved&sort=-scheduled_at
+        $appointments = QueryBuilder::for(Appointment::class)
+            ->where('user_id', $userId)
+            ->allowedFilters([
+                AllowedFilter::exact('status'),
+            ])
+            ->allowedSorts(['scheduled_at', 'created_at'])
+            ->defaultSort('-scheduled_at')
             ->with(['car.brand'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(5, ['*'], 'inquiries_page');
+            ->paginate(5, ['*'], 'appointments_page')
+            ->appends(request()->query());
+
+        // Spatie Query Builder for Inquiries
+        // URL Example: /dashboard/appointments?filter[subject]=finance
+        $inquiries = QueryBuilder::for(Inquiry::class)
+            ->where('user_id', $userId)
+            ->allowedFilters([
+                'subject',
+                AllowedFilter::exact('status'),
+            ])
+            ->allowedSorts(['created_at'])
+            ->defaultSort('-created_at')
+            ->with(['car.brand'])
+            ->paginate(5, ['*'], 'inquiries_page')
+            ->appends(request()->query());
 
         return view('customer.appointments.index', compact('appointments', 'inquiries'));
     }
@@ -66,5 +87,21 @@ class AppointmentController extends Controller
 
         return redirect()->route('dashboard.appointments.index')
             ->with('success', 'Your viewing request has been submitted. Our team will review and confirm your schedule shortly.');
+    }
+
+    public function cancel(Appointment $appointment): RedirectResponse
+    {
+        abort_if($appointment->user_id !== auth()->id(), 403);
+    
+        if (in_array($appointment->status, ['Pending', 'Approved'])) {
+            $appointment->update(['status' => 'Cancelled']);
+        
+            // Notify Admin that the slot is free
+            Mail::to(config('mail.from.address'))->send(new AppointmentCancelledMail($appointment)); 
+        
+            return back()->with('success', 'Your viewing request has been cancelled successfully.');
+        }
+
+        return back()->with('error', 'This appointment can no longer be cancelled.');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -9,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 
 class Car extends Model implements HasMedia
 {
@@ -46,12 +46,17 @@ class Car extends Model implements HasMedia
         return $this->belongsTo(CarType::class);
     }
 
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'wishlists')->withTimestamps();
+    }
+
     // Optional: Define specific media conversions (e.g., thumbnails for the catalog)
-    public function registerMediaConversions(Media $media = null): void
+    public function registerMediaConversions(?Media $media = null): void
     {
         $this->addMediaConversion('thumb')
-              ->width(300)
-              ->height(300)
-              ->sharpen(10);
+            ->width(300)
+            ->height(300)
+            ->sharpen(10);
     }
 }

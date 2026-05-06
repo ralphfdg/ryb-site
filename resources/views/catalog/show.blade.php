@@ -170,11 +170,30 @@
                             </div>
                             <div class="flex flex-col sm:flex-row w-full md:w-auto gap-4">
                                 @auth
-                                    <button
-                                        onclick="document.getElementById('interaction-hub').scrollIntoView({behavior: 'smooth'})"
-                                        class="px-8 py-3 bg-ryb-red text-white font-bold rounded-xl hover:bg-ryb-red-dark transition shadow-lg shadow-ryb-red/20 whitespace-nowrap">
-                                        Interact with Dealer
-                                    </button>
+                                    <div class="flex gap-2">
+                                        <button
+                                            onclick="document.getElementById('interaction-hub').scrollIntoView({behavior: 'smooth'})"
+                                            class="px-8 py-3 bg-ryb-red text-white font-bold rounded-xl hover:bg-ryb-red-dark transition shadow-lg shadow-ryb-red/20 whitespace-nowrap">
+                                            Interact with Dealer
+                                        </button>
+
+                                        {{-- Save to Wishlist Button --}}
+                                        <button x-data @click.prevent="$store.wishlist.toggle({{ $car->id }})"
+                                            class="px-6 py-3 border font-bold rounded-xl transition flex items-center gap-2"
+                                            :class="$store.wishlist.items.includes({{ $car->id }}) ?
+                                                'border-ryb-red text-ryb-red bg-ryb-red/10' :
+                                                'border-ryb-muted text-zinc-400 hover:text-white hover:border-white/30'">
+                                            <svg class="w-5 h-5"
+                                                :fill="$store.wishlist.items.includes({{ $car->id }}) ? 'currentColor' :
+                                                    'none'"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                            </svg>
+                                            <span
+                                                x-text="$store.wishlist.items.includes({{ $car->id }}) ? 'Saved' : 'Save Car'"></span>
+                                        </button>
+                                    </div>
                                 @else
                                     <a href="{{ route('login') }}"
                                         class="px-8 py-3 border border-ryb-red text-ryb-red font-bold rounded-xl hover:bg-ryb-red hover:text-white transition text-center">
@@ -189,8 +208,8 @@
 
             {{-- ===== INTERACTION HUB (AUTHENTICATED ONLY) ===== --}}
             @auth
-                <div id="interaction-hub" class="mt-24 max-w-4xl mx-auto" x-data="appointmentScheduler(@json($bookedSlots ?? []))">
-
+                <div id="interaction-hub" class="mt-24 max-w-4xl mx-auto"
+                    x-data='appointmentScheduler(@json($bookedSlots ?? []))'>
                     <div class="flex space-x-2 bg-ryb-dark p-1 rounded-2xl mb-6 border border-ryb-muted">
                         <button @click="activeTab = 'appointment'"
                             :class="activeTab === 'appointment' ? 'bg-ryb-red text-white shadow-lg' :
@@ -217,8 +236,41 @@
                             <p class="text-zinc-500 text-center mb-8">Select an available date and time slot for inspection.
                             </p>
 
+                            {{-- NEW: Global Limit Warning (E.g., 3 active appointments reached) --}}
+                            @error('limit')
+                                <div
+                                    class="mb-8 bg-ryb-red/10 border border-ryb-red/30 p-4 rounded-xl flex items-start gap-4 text-ryb-red backdrop-blur-md shadow-lg shadow-ryb-red/5">
+                                    <svg class="w-6 h-6 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                        </path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="font-bold text-sm tracking-wide uppercase">Request Limit Reached</h4>
+                                        <p class="text-sm mt-1 text-ryb-red/80">{{ $message }}</p>
+                                    </div>
+                                </div>
+                            @enderror
+
+                            {{-- NEW: Vehicle Specific Warning (E.g., Already pending for this car) --}}
+                            @error('car_id')
+                                <div
+                                    class="mb-8 bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-xl flex items-start gap-4 text-yellow-500 backdrop-blur-md shadow-lg shadow-yellow-500/5">
+                                    <svg class="w-6 h-6 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="font-bold text-sm tracking-wide uppercase">Duplicate Request</h4>
+                                        <p class="text-sm mt-1 text-yellow-500/80">{{ $message }}</p>
+                                    </div>
+                                </div>
+                            @enderror
+
                             <form action="{{ route('dashboard.appointments.store') }}" method="POST" class="space-y-8"
-                                @submit="validateForm">
+                                @submit="validateForm($event)">
                                 @csrf
                                 <input type="hidden" name="car_id" value="{{ $car->id }}">
                                 <input type="hidden" name="scheduled_at" :value="formattedDateTime">
@@ -340,81 +392,4 @@
             @endauth
         </div>
     </div>
-
-    @push('scripts')
-        {{-- Vite standard: Move scheduler to resources/js/appointmentScheduler.js and import if preferred --}}
-        <script>
-            function appointmentScheduler(bookedSlots) {
-                return {
-                    activeTab: 'appointment',
-                    selectedDate: '',
-                    selectedTime: '',
-                    availableDates: [],
-                    bookedSlots: bookedSlots,
-                    timeSlots: [{
-                            value: '09:00',
-                            display: '09:00 AM'
-                        },
-                        {
-                            value: '11:00',
-                            display: '11:00 AM'
-                        },
-                        {
-                            value: '13:00',
-                            display: '01:00 PM'
-                        },
-                        {
-                            value: '15:00',
-                            display: '03:00 PM'
-                        },
-                        {
-                            value: '16:30',
-                            display: '04:30 PM'
-                        }
-                    ],
-                    init() {
-                        this.generateDates();
-                        this.$watch('selectedDate', () => this.selectedTime = '');
-                    },
-                    generateDates() {
-                        for (let i = 1; i <= 6; i++) {
-                            let d = new Date();
-                            d.setDate(d.getDate() + i);
-                            if (d.getDay() === 0) {
-                                i++;
-                                d.setDate(d.getDate() + 1);
-                            }
-                            this.availableDates.push({
-                                value: d.toISOString().split('T')[0],
-                                dayName: d.toLocaleDateString('en-US', {
-                                    weekday: 'short'
-                                }),
-                                display: d.toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric'
-                                })
-                            });
-                        }
-                    },
-                    get processedTimeSlots() {
-                        if (!this.selectedDate) return [];
-                        return this.timeSlots.map(time => ({
-                            ...time,
-                            isBooked: this.bookedSlots.includes(`${this.selectedDate} ${time.value}`)
-                        }));
-                    },
-                    get formattedDateTime() {
-                        return (this.selectedDate && this.selectedTime) ? `${this.selectedDate} ${this.selectedTime}:00` :
-                            '';
-                    },
-                    validateForm(e) {
-                        if (!this.selectedDate || !this.selectedTime) {
-                            e.preventDefault();
-                            alert('Select a valid slot.');
-                        }
-                    }
-                }
-            }
-        </script>
-    @endpush
 @endsection

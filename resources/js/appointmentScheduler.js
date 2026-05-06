@@ -3,10 +3,7 @@ export default (bookedSlots = []) => ({
     selectedDate: '',
     selectedTime: '',
     availableDates: [],
-    
-    // Data passed from Blade is caught in the parameter above
-    bookedSlots: bookedSlots, 
-    
+    bookedSlots: bookedSlots,
     timeSlots: [
         { value: '09:00', display: '09:00 AM' },
         { value: '11:00', display: '11:00 AM' },
@@ -17,29 +14,32 @@ export default (bookedSlots = []) => ({
 
     init() {
         this.generateDates();
-        
-        // Reset time selection if the date changes
         this.$watch('selectedDate', () => {
             this.selectedTime = '';
         });
     },
 
     generateDates() {
-        for(let i = 1; i <= 6; i++) {
+        this.availableDates = []; // Clear array to prevent duplicates
+
+        for (let i = 1; i <= 6; i++) {
             let d = new Date();
             d.setDate(d.getDate() + i);
             
-            // Skip Sundays (0 = Sunday in JS Date)
-            if(d.getDay() === 0) {
-                i++; 
+            // Skip Sundays
+            if (d.getDay() === 0) {
+                i++;
                 d.setDate(d.getDate() + 1);
             }
 
-            // Format value for Laravel (YYYY-MM-DD)
-            let val = d.toISOString().split('T')[0];
-            
+            // Extract strictly local time values to avoid UTC backward shifts
+            let year = d.getFullYear();
+            let month = String(d.getMonth() + 1).padStart(2, '0');
+            let day = String(d.getDate()).padStart(2, '0');
+            let localDateValue = `${year}-${month}-${day}`;
+
             this.availableDates.push({
-                value: val,
+                value: localDateValue, 
                 dayName: d.toLocaleDateString('en-US', { weekday: 'short' }),
                 display: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
             });
@@ -47,26 +47,27 @@ export default (bookedSlots = []) => ({
     },
 
     get processedTimeSlots() {
-        if(!this.selectedDate) return [];
-
-        return this.timeSlots.map(time => {
-            let slotDateTime = `${this.selectedDate} ${time.value}`;
-            return { 
-                ...time, 
-                isBooked: this.bookedSlots.includes(slotDateTime)
-            };
-        });
+        if (!this.selectedDate) return [];
+        return this.timeSlots.map(time => ({
+            ...time,
+            isBooked: this.bookedSlots.includes(`${this.selectedDate} ${time.value}`)
+        }));
     },
 
     get formattedDateTime() {
-        if(!this.selectedDate || !this.selectedTime) return '';
-        return `${this.selectedDate} ${this.selectedTime}:00`;
+        return (this.selectedDate && this.selectedTime) 
+            ? `${this.selectedDate} ${this.selectedTime}:00` 
+            : '';
     },
 
     validateForm(e) {
-        if(!this.selectedDate || !this.selectedTime) {
+        if (!this.selectedDate || !this.selectedTime) {
             e.preventDefault();
             alert('Please select both an available date and time to continue.');
+            return;
         }
+        
+        // Debugging confirmation: Check your browser console!
+        console.log("Submitting to Laravel:", this.formattedDateTime);
     }
 });

@@ -10,25 +10,32 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewAppointmentMail extends Mailable
+class AppointmentCancelledMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(
-        public Appointment $appointment
-    ) {}
+    /**
+     * Create a new message instance.
+     */
+    public function __construct(public Appointment $appointment) {}
 
+    /**
+     * Get the message envelope.
+     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Viewing Request: ' . $this->appointment->car->brand->brand_name . ' ' . $this->appointment->car->model_name,
+            subject: 'Viewing Cancelled: ' . $this->appointment->car->brand->brand_name . ' ' . $this->appointment->car->model_name,
         );
     }
 
+    /**
+     * Get the message content definition.
+     */
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.admin.new-appointment',
+            markdown: 'emails.admin.appointment-cancelled', // Path to the blade file
         );
     }
 }

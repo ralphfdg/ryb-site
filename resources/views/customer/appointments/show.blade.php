@@ -37,6 +37,8 @@
                     </div>
                 </div>
 
+
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     {{-- Left Col: Schedule & Info --}}
                     <div class="space-y-6">
@@ -72,7 +74,36 @@
                                 </a>
                             </div>
                         </div>
+                        {{-- Status-Based Action Area --}}
+                        <div
+                            class="mt-8 pt-8 border-t border-ryb-muted flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div class="text-center md:text-left">
+                                <h4 class="text-white font-bold mb-1">Need to change your plans?</h4>
+                                <p class="text-zinc-500 text-sm">If you can no longer attend, please cancel so others may
+                                    view this vehicle.</p>
+                            </div>
+
+                            @if (in_array($appointment->status, ['Pending', 'Approved']))
+                                <form action="{{ route('dashboard.appointments.cancel', $appointment->id) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Are you sure you want to cancel this viewing request?')">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                        class="px-8 py-3 border-2 border-ryb-red text-ryb-red hover:bg-ryb-red hover:text-white font-bold rounded-xl transition duration-300 shadow-lg shadow-ryb-red/5">
+                                        Cancel Appointment
+                                    </button>
+                                </form>
+                            @else
+                                <div
+                                    class="px-6 py-3 bg-ryb-dark border border-ryb-muted rounded-xl text-zinc-500 text-sm italic">
+                                    Cancellation is no longer available for this status.
+                                </div>
+                            @endif
+                        </div>
                     </div>
+
+
 
                     {{-- Right Col: Dealership Notes --}}
                     <div class="bg-ryb-darker p-6 rounded-xl border border-ryb-muted flex flex-col justify-between">
