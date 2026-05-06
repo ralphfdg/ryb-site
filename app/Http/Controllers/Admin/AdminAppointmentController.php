@@ -27,7 +27,7 @@ class AdminAppointmentController extends Controller
     public function show(Appointment $appointment): View
     {
         // Eager load the user (via UUID) and the specific car details[cite: 1]
-        $appointment->load(['user', 'car.brand', 'car.specification']);
+        $appointment->load(['user', 'car.brand', 'car.carSpecification']);
         
         return view('admin.appointments.show', compact('appointment'));
     }

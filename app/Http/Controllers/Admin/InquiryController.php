@@ -7,6 +7,8 @@ use App\Models\Inquiry;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Mail\InquiryReplyMail;
+use Illuminate\Support\Facades\Mail;
 
 class InquiryController extends Controller
 {
@@ -49,14 +51,24 @@ class InquiryController extends Controller
         return view('admin.inquiries.show', compact('inquiry'));
     }
 
-    /**
-     * Mark an inquiry as resolved.
+   /**
+     * Mark an inquiry as resolved and send the email response.
      */
     public function resolve(Request $request, Inquiry $inquiry): RedirectResponse
     {
+        $validated = $request->validate([
+            'admin_response' => 'required|string|min:5'
+        ]);
+
         // Simple state mutation to clear the admin dashboard backlog
         $inquiry->update(['status' => 'Resolved']);
 
-        return back()->with('success', 'Inquiry marked as resolved.');
+        // Dispatch the email to the authenticated user's email address
+        Mail::to($inquiry->user->email)->send(
+            new InquiryReplyMail($inquiry, $validated['admin_response'])
+        );
+
+        return redirect()->route('admin.inquiries.index')
+            ->with('success', 'Inquiry resolved and response sent to the customer.');
     }
 }

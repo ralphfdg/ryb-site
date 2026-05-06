@@ -10,8 +10,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[ObservedBy([AppointmentObserver::class])]
 class Appointment extends Model
 {
-    // Protect the ID from mass assignment
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'car_id',
+        'user_id',
+        'scheduled_at',
+        'status',
+        'negotiated_price',
+        'commitment_status',
+        'admin_remarks',
+    ];
 
     /**
      * Laravel 12 type casting method.
@@ -37,7 +44,7 @@ class Appointment extends Model
      * The authenticated user requesting the viewing.
      * Note: We specify 'user_id' explicitly as the foreign key.
      */
-    public function customer(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }

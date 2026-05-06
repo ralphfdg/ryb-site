@@ -1,145 +1,84 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="flex justify-between items-end mb-8">
+    <div class="flex justify-between items-end mb-10">
         <div>
-            <h2 class="text-2xl font-bold font-['Oswald'] tracking-wide uppercase mb-1">
-                <span class="text-white">Appointment</span> <span class="text-[#e52a2a]">Hub</span>
+            <h2 class="text-3xl font-bold font-['Oswald'] tracking-wide uppercase mb-1">
+                <span class="text-white">Operations</span> <span class="text-[#e52a2a]">Hub</span>
             </h2>
-            <p class="text-[#666666] text-xs">Manage customer viewings and sales conversions.</p>
+            <p class="text-[#666] text-sm">Manage vehicle viewing schedules, negotiations, and commitments.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="bg-[#111]/80 px-4 py-2 rounded-lg border border-[#222] text-[#888] text-xs flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#e52a2a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Pending Approvals: <span class="text-white font-bold">{{ $appointments->where('status', 'Pending')->count() }}</span>
+            </span>
         </div>
     </div>
 
-    <!-- Alpine Component Wrapping the Entire Page -->
-    <div x-data="{ updateModalOpen: false, saleModalOpen: false, activeAppointmentId: null }">
+    @if(session('success'))
+        <div class="mb-6 bg-[#051c0d]/80 backdrop-blur border border-[#0a381a] text-[#2ecc71] px-4 py-3 rounded-lg text-sm shadow-lg">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="bg-[#111111]/70 backdrop-blur-xl rounded-2xl border border-[#222] overflow-hidden shadow-2xl p-6">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+                <thead class="text-[10px] uppercase text-[#888] border-b border-[#222] tracking-widest bg-[#0a0a0a]/50">
+                    <tr>
+                        <th class="px-4 py-4 font-semibold rounded-tl-lg">ID</th>
+                        <th class="px-4 py-4 font-semibold">Customer Details</th>
+                        <th class="px-4 py-4 font-semibold">Vehicle Requested</th>
+                        <th class="px-4 py-4 font-semibold">Scheduled Date</th>
+                        <th class="px-4 py-4 font-semibold">Status</th>
+                        <th class="px-4 py-4 font-semibold text-right rounded-tr-lg">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#222] text-[12px]">
+                    @forelse($appointments as $appointment)
+                    <tr class="hover:bg-[#1a1a1a]/50 transition-colors group">
+                        <td class="px-4 py-4 text-[#555] font-mono">#{{ str_pad($appointment->id, 5, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-4 py-4">
+                            <p class="text-white font-bold text-sm">{{ $appointment->user->name ?? 'Guest/Deleted' }}</p>
+                            <p class="text-[#a0a0a0]">{{ $appointment->user->phone_number ?? 'N/A' }}</p>
+                        </td>
+                        <td class="px-4 py-4">
+                            <p class="text-white font-medium">{{ $appointment->car->brand->brand_name ?? 'Unknown' }} {{ $appointment->car->model_name ?? '' }}</p>
+                            <p class="text-[#888] text-[10px]">VIN: <span class="font-mono">{{ $appointment->car->specification->vin_number ?? 'N/A' }}</span></p>
+                        </td>
+                        <td class="px-4 py-4">
+                            <p class="text-[#ddd] font-medium">{{ \Carbon\Carbon::parse($appointment->scheduled_at)->format('M d, Y') }}</p>
+                            <p class="text-[#888] text-[10px]">{{ \Carbon\Carbon::parse($appointment->scheduled_at)->format('h:i A') }}</p>
+                        </td>
+                        <td class="px-4 py-4">
+                            @if($appointment->status == 'Pending')
+                                <span class="px-3 py-1 bg-[#2a1a08] text-[#f39c12] rounded-full border border-[#3a2a0a] text-[9px] font-bold uppercase tracking-wider">Pending</span>
+                            @elseif($appointment->status == 'Approved')
+                                <span class="px-3 py-1 bg-[#051c0d] text-[#2ecc71] rounded-full border border-[#0a381a] text-[9px] font-bold uppercase tracking-wider">Approved</span>
+                            @elseif($appointment->status == 'Committed')
+                                <span class="px-3 py-1 bg-[#1a0a2a] text-[#9b59b6] rounded-full border border-[#2a0a3a] text-[9px] font-bold uppercase tracking-wider">Committed</span>
+                            @else
+                                <span class="px-3 py-1 bg-[#2a0808] text-[#e52a2a] rounded-full border border-[#3a0a0a] text-[9px] font-bold uppercase tracking-wider">{{ $appointment->status }}</span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-4 text-right">
+                            <a href="{{ route('admin.appointments.show', $appointment) }}" class="inline-block bg-[#e52a2a] hover:bg-[#c92222] text-white text-[10px] font-bold uppercase tracking-wider px-4 py-2 rounded transition-colors shadow-sm">
+                                Process
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-4 py-12 text-center text-[#666]">No appointments in the operational queue.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
         
-        @if(session('success'))
-            <div class="bg-[#2ecc71]/10 border-l-4 border-[#2ecc71] text-[#a8f0c6] p-4 mb-6 rounded text-sm">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="bg-[#111111] rounded-xl border border-[#1a1a1a] overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead class="text-[10px] uppercase text-[#666666] border-b border-[#1a1a1a] tracking-widest bg-[#0a0a0a]">
-                        <tr>
-                            <th class="px-4 py-4 font-semibold">Customer</th>
-                            <th class="px-4 py-4 font-semibold">Vehicle</th>
-                            <th class="px-4 py-4 font-semibold">Date & Time</th>
-                            <th class="px-4 py-4 font-semibold">Status</th>
-                            <th class="px-4 py-4 font-semibold text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-[#1a1a1a] text-xs">
-                        @forelse($appointments as $appointment)
-                            <tr class="hover:bg-[#151515] transition-colors">
-                                <td class="px-4 py-4 font-bold text-white">{{ $appointment->customer->name }}</td>
-                                <td class="px-4 py-4 text-[#a0a0a0]">{{ $appointment->car->year }} {{ $appointment->car->model_name }}</td>
-                                <td class="px-4 py-4 text-[#a0a0a0]">{{ $appointment->scheduled_at->format('M j, Y - g:i A') }}</td>
-                                <td class="px-4 py-4">
-                                    @if($appointment->status == 'Approved')
-                                        <span class="px-2 py-1 bg-[#051c0d] text-[#2ecc71] rounded border border-[#0a381a] text-[9px] font-bold uppercase tracking-wider">{{ $appointment->status }}</span>
-                                    @elseif($appointment->status == 'Viewed')
-                                        <span class="px-2 py-1 bg-[#1a1a05] text-[#f5c518] rounded border border-[#332a0a] text-[9px] font-bold uppercase tracking-wider">{{ $appointment->status }}</span>
-                                    @else
-                                        <span class="px-2 py-1 bg-[#1a1a1a] text-[#666666] rounded border border-[#333333] text-[9px] font-bold uppercase tracking-wider">{{ $appointment->status }}</span>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-4 flex justify-end gap-2 mt-1">
-                                    
-                                    <!-- Step 2: Approve Action -->
-                                    @if($appointment->status === 'Pending')
-                                        <form action="{{ route('admin.appointments.approve', $appointment) }}" method="POST" class="inline">
-                                            @csrf @method('PATCH')
-                                            <button type="submit" class="px-3 py-1 rounded bg-[#1a1a1a] border border-[#2a2a2a] text-[#4ea8de] hover:text-white transition-colors text-[10px] font-bold uppercase tracking-wider">Approve</button>
-                                        </form>
-                                    @endif
-
-                                    <!-- Steps 3 & 4: Update/Commit Action (Opens Alpine Modal) -->
-                                    @if(in_array($appointment->status, ['Approved', 'Viewed']))
-                                        <button @click="updateModalOpen = true; activeAppointmentId = {{ $appointment->id }}" class="px-3 py-1 rounded bg-[#1a1a1a] border border-[#2a2a2a] text-[#9d4edd] hover:text-white transition-colors text-[10px] font-bold uppercase tracking-wider">Update</button>
-                                    @endif
-
-                                    <!-- Step 5: Finalize Sale Action (Opens Alpine Modal) -->
-                                    @if($appointment->status === 'Committed')
-                                        <button @click="saleModalOpen = true; activeAppointmentId = {{ $appointment->id }}" class="px-3 py-1 rounded bg-[#1a1a1a] border border-[#2a2a2a] text-[#2ecc71] hover:text-white transition-colors text-[10px] font-bold uppercase tracking-wider">Close Sale</button>
-                                    @endif
-
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="px-4 py-12 text-center text-[#666666]">
-                                    <p class="mb-2">No appointments found.</p>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+        <div class="mt-6 border-t border-[#222] pt-4">
+            {{ $appointments->links() }}
         </div>
-
-        <!-- Update Appointment Modal (Steps 3 & 4) -->
-        <div x-show="updateModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" x-cloak style="display: none;">
-            <div @click.away="updateModalOpen = false" class="bg-[#111111] border border-[#1a1a1a] p-6 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.8)] w-full max-w-md">
-                <h3 class="text-lg font-bold text-white mb-4 uppercase tracking-wide">Update Viewing Status</h3>
-                
-                <form x-bind:action="`/admin/appointments/${activeAppointmentId}`" method="POST">
-                    @csrf @method('PUT')
-                    
-                    <div class="mb-4">
-                        <label class="block text-[10px] uppercase tracking-widest text-[#666666] mb-1">Status Update</label>
-                        <select name="status" class="w-full bg-[#0a0a0a] border border-[#1a1a1a] text-white rounded focus:ring-[#e52a2a] focus:border-[#e52a2a] text-sm p-2.5">
-                            <option value="Viewed">Viewed (Negotiating)</option>
-                            <option value="Committed">Committed (Will Reserve Car)</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-[10px] uppercase tracking-widest text-[#666666] mb-1">Negotiated Price ($)</label>
-                        <input type="number" name="negotiated_price" step="0.01" class="w-full bg-[#0a0a0a] border border-[#1a1a1a] text-white rounded focus:ring-[#e52a2a] focus:border-[#e52a2a] text-sm p-2.5" placeholder="e.g. 50000.00">
-                    </div>
-
-                    <div class="mb-6">
-                        <label class="block text-[10px] uppercase tracking-widest text-[#666666] mb-1">Admin Remarks</label>
-                        <textarea name="admin_remarks" rows="3" class="w-full bg-[#0a0a0a] border border-[#1a1a1a] text-white rounded focus:ring-[#e52a2a] focus:border-[#e52a2a] text-sm p-2.5"></textarea>
-                    </div>
-
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" @click="updateModalOpen = false" class="px-4 py-2 text-[#666666] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Cancel</button>
-                        <button type="submit" class="px-4 py-2 bg-[#9d4edd] hover:bg-purple-600 text-white rounded text-xs font-bold uppercase tracking-wider transition-colors">Save Update</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Finalize Sale Modal (Step 5) -->
-        <div x-show="saleModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" x-cloak style="display: none;">
-            <div @click.away="saleModalOpen = false" class="bg-[#111111] border border-[#1a1a1a] p-6 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.8)] w-full max-w-md">
-                <h3 class="text-lg font-bold text-[#2ecc71] mb-4 uppercase tracking-wide">Finalize Transaction</h3>
-                
-                <form action="{{ route('admin.sales.store') }}" method="POST">
-                    @csrf
-                    <!-- Pass the dynamic ID to the backend -->
-                    <input type="hidden" name="appointment_id" x-bind:value="activeAppointmentId">
-                    
-                    <div class="mb-6">
-                        <label class="block text-[10px] uppercase tracking-widest text-[#666666] mb-1">Payment Method</label>
-                        <select name="payment_method" class="w-full bg-[#0a0a0a] border border-[#1a1a1a] text-white rounded focus:ring-[#2ecc71] focus:border-[#2ecc71] text-sm p-2.5">
-                            <option value="Cash">Cash Transaction</option>
-                            <option value="Financing">In-House / Bank Financing</option>
-                        </select>
-                    </div>
-
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" @click="saleModalOpen = false" class="px-4 py-2 text-[#666666] hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">Cancel</button>
-                        <button type="submit" class="px-4 py-2 bg-[#2ecc71] hover:bg-green-600 text-white rounded text-xs font-bold uppercase tracking-wider transition-colors">Confirm Sale</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
     </div>
 @endsection

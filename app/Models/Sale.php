@@ -10,11 +10,14 @@ class Sale extends Model
 {
     use SoftDeletes, HasUuids;
 
-    // Explicitly define the primary key since it's not 'id'
-    protected $primaryKey = 'uuid';
-
-    protected $guarded = ['uuid'];
-
+    protected $fillable = [
+        'car_id',
+        'customer_id',
+        'appointment_id',
+        'sale_price',
+        'payment_method',
+    ];
+    
     protected function casts(): array
     {
         return [
