@@ -68,15 +68,14 @@ class CatalogController extends Controller
 
         // 2. Fetch upcoming booked slots for THIS specific car
         // We block 'Approved', 'Viewed', and 'Committed' to prevent double-booking
-        $bookedSlots = Appointment::where('car_id', $car->id)
-            ->whereIn('status', ['Approved', 'Viewed', 'Committed'])
-            ->where('scheduled_at', '>=', now())
-            ->pluck('scheduled_at')
-            ->map(function ($date) {
-                // Format to match Alpine.js expectation: "YYYY-MM-DD HH:MM"
-                return Carbon::parse($date)->format('Y-m-d H:i');
-            })
-            ->toArray();
+        $bookedSlots = Appointment::whereIn('status', ['Approved', 'Viewed', 'Committed'])
+    ->pluck('scheduled_at')
+    ->map(function($date) {
+        return \Carbon\Carbon::parse($date)
+            ->timezone(config('app.timezone'))
+            ->format('Y-m-d H:i');
+    })
+    ->toArray();
 
         return view('catalog.show', compact('car', 'bookedSlots'));
     }

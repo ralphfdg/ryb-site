@@ -11,11 +11,6 @@ class AppointmentObserver
     public function updated(Appointment $appointment): void
     {
         if ($appointment->wasChanged('status')) {
-            
-            // NEW: Send approval email to customer via Mailtrap
-            if ($appointment->status === 'Approved') {
-                Mail::to($appointment->user->email)->send(new AppointmentApprovedMail($appointment));
-            }
 
             // Phase 2, Step 4: Commitment
             if ($appointment->status === 'Committed') {

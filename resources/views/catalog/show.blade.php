@@ -209,7 +209,7 @@
             {{-- ===== INTERACTION HUB (AUTHENTICATED ONLY) ===== --}}
             @auth
                 <div id="interaction-hub" class="mt-24 max-w-4xl mx-auto"
-                    x-data='appointmentScheduler(@json($bookedSlots ?? []))'>
+                    x-data='appointmentScheduler(@json($bookedSlots))'>
                     <div class="flex space-x-2 bg-ryb-dark p-1 rounded-2xl mb-6 border border-ryb-muted">
                         <button @click="activeTab = 'appointment'"
                             :class="activeTab === 'appointment' ? 'bg-ryb-red text-white shadow-lg' :
@@ -310,20 +310,21 @@
                                                 <button type="button" @click="if(!time.isBooked) selectedTime = time.value"
                                                     :disabled="time.isBooked"
                                                     :class="{
-                                                        'bg-ryb-red border-ryb-red text-white': selectedTime === time
+                                                        'bg-[#e52a2a] border-[#e52a2a] text-white': selectedTime ===
+                                                            time.value,
+                                                        'bg-[#0a0a0a] border-[#222] text-[#888]': selectedTime !== time
                                                             .value && !time.isBooked,
-                                                        'bg-ryb-darker border-ryb-muted text-zinc-400': selectedTime !==
-                                                            time.value && !time.isBooked,
-                                                        'bg-ryb-darker opacity-30 text-zinc-700 cursor-not-allowed': time
+                                                        'bg-[#1a0505] border-[#3a0a0a] text-ryb-red/20 cursor-not-allowed': time
                                                             .isBooked
                                                     }"
-                                                    class="border rounded-xl p-3 text-center transition relative overflow-hidden group">
-                                                    <p class="text-base font-bold" x-text="time.display"></p>
-                                                    <div x-show="time.isBooked"
-                                                        class="absolute inset-0 flex items-center justify-center bg-black/40">
+                                                    class="border rounded-lg p-2 text-xs font-bold transition relative overflow-hidden group">
+
+                                                    <span x-text="time.display"></span>
+
+                                                    <template x-if="time.isBooked">
                                                         <span
-                                                            class="text-[8px] font-black uppercase tracking-tighter text-ryb-red">TAKEN</span>
-                                                    </div>
+                                                            class="absolute inset-0 flex items-center justify-center bg-black/60 text-[8px] text-[#e52a2a] font-black uppercase tracking-tighter">Taken</span>
+                                                    </template>
                                                 </button>
                                             </template>
                                         </div>
