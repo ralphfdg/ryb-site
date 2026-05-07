@@ -388,20 +388,6 @@
         <p class="brand-desc">
             Browse our premium inventory of quality vehicles. Find your perfect car — from daily drivers to luxury rides.
         </p>
-        <div class="brand-stats">
-            <div class="stat-item">
-                <div class="stat-num">156</div>
-                <div class="stat-label">Cars Listed</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-num">487</div>
-                <div class="stat-label">Customers</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-num">$1.2M</div>
-                <div class="stat-label">Total Sales</div>
-            </div>
-        </div>
     </div>
 
     <!-- Right Form -->

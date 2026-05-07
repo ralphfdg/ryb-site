@@ -105,7 +105,7 @@
             @forelse ($featuredCars as $car)
                 <div class="snap-start shrink-0 w-[85vw] max-w-[320px] md:max-w-[400px] group bg-ryb-dark border border-ryb-muted rounded-2xl overflow-hidden hover:border-ryb-red/50 transition duration-300 shadow-xl shadow-black/40">
                     <div class="relative overflow-hidden bg-ryb-darker h-56">
-                        <img src="{{ $car->getFirstMediaUrl('images') ?: 'https://placehold.co/600x400/18181b/27272a?text=Vehicle' }}"
+                        <img src="{{ $car->getFirstMediaUrl('car_gallery') ?: 'https://placehold.co/600x400/18181b/27272a?text=Vehicle' }}"
                              class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-500">
                         <div class="absolute top-4 right-4 bg-ryb-darker/90 backdrop-blur px-3 py-1 rounded-full border border-ryb-muted">
                             <span class="text-[10px] font-bold text-white uppercase tracking-widest">{{ $car->status }}</span>

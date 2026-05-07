@@ -46,7 +46,7 @@
         <!-- Total Sales -->
         <div class="bg-[#111111]/80 backdrop-blur-md p-5 rounded-xl border border-[#1a1a1a] shadow-lg">
             <h3 class="text-[#666666] text-[9px] font-bold uppercase tracking-widest mb-1">Total Sales</h3>
-            <p class="text-2xl font-bold text-yellow-500 mb-1">${{ number_format($totalSales, 2) }}</p>
+            <p class="text-2xl font-bold text-yellow-500 mb-1">₱{{ number_format($totalSales, 2) }}</p>
         </div>
     </div>
 
