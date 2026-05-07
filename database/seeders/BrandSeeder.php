@@ -11,7 +11,7 @@ class BrandSeeder extends Seeder
     {
         $brands = [
             'Toyota', 'Honda', 'Ford', 'Chevrolet', 
-            'Nissan', 'BMW', 'Mercedes-Benz', 'Audi'
+             'BMW'
         ];
 
         foreach ($brands as $brandName) {
