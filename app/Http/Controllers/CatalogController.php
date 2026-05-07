@@ -53,7 +53,7 @@ class CatalogController extends Controller
             ])
             ->allowedSorts(['price', 'created_at', 'mileage', 'year'])
             ->with(['brand', 'carType', 'carSpecification', 'media'])
-            ->paginate(12);
+            ->paginate(6);
 
         return view('catalog.index', compact('cars', 'brands', 'carTypes', 'filterOptions'));
     }

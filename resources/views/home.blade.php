@@ -25,9 +25,6 @@
                 <a href="{{ route('catalog.index') }}" class="px-8 py-4 bg-ryb-red text-white font-bold rounded-full hover:bg-ryb-red-dark transition shadow-lg shadow-black/50 border border-ryb-red-dark">
                     Explore Inventory
                 </a>
-                <a href="/contact" class="px-8 py-4 border border-ryb-muted text-ryb-light font-semibold rounded-full hover:bg-ryb-muted hover:text-white transition backdrop-blur-sm">
-                    Book a Viewing
-                </a>
             </div>
         </div>
     </div>
