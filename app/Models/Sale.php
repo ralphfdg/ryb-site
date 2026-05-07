@@ -10,6 +10,9 @@ class Sale extends Model
 {
     use SoftDeletes, HasUuids;
 
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
         'car_id',
         'customer_id',

@@ -13,7 +13,7 @@ return new class extends Migration
 {
     Schema::create('sales', function (Blueprint $table) {
         // Using 'uuid' as the column name per your Data Dictionary, but making it the PK
-        $table->uuid('uuid')->primary(); 
+        $table->uuid('id')->primary(); 
         $table->foreignId('car_id')->constrained('cars');
         $table->foreignUuid('customer_id')->constrained('users');
         $table->foreignId('appointment_id')->constrained('appointments');

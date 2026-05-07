@@ -60,14 +60,20 @@ export default (bookedSlots = []) => ({
             : '';
     },
 
-    validateForm(e) {
+    validateForm(e, isAdmin = false) {
+        // 1. If Admin didn't touch the scheduler (both empty), allow the submit
+        if (isAdmin && !this.selectedDate && !this.selectedTime) {
+            return true; 
+        }
+
+        // 2. If they ARE in the catalog (isAdmin = false) OR if they started picking a date:
+        // They MUST select both Date and Time.
         if (!this.selectedDate || !this.selectedTime) {
             e.preventDefault();
-            alert('Please select both an available date and time to continue.');
-            return;
+            alert('Please select both a date and a time slot.');
+            return false;
         }
-        
-        // Debugging confirmation: Check your browser console!
-        console.log("Submitting to Laravel:", this.formattedDateTime);
+
+        return true;
     }
 });

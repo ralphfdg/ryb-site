@@ -7,7 +7,7 @@ Great news! We have confirmed your viewing schedule for the **{{ $appointment->c
 
 **Confirmed Schedule:** {{ \Carbon\Carbon::parse($appointment->scheduled_at)->format('l, F j, Y \a\t g:i A') }}
 
-Please arrive 10 minutes early. If you need to reschedule or cancel, you can manage this directly from your dashboard.
+Please arrive 10 minutes early. If you need to cancel, you can manage this directly from your dashboard.
 
 <x-mail::button :url="route('dashboard.appointments.show', $appointment->id)">
 View Appointment Details
