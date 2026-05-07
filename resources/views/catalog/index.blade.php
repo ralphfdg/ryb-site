@@ -15,14 +15,15 @@
     <div x-data="catalogFilter('{{ route('catalog.compare') }}')" class="bg-[#0f0f11] min-h-screen relative pb-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row gap-8 lg:gap-10">
 
-            {{-- Call the new Component --}}
+            {{-- Call the new Sidebar Component --}}
             <x-filter-sidebar :action-route="route('catalog.index')" :brands="$brands" :car-types="$carTypes" :filter-options="$filterOptions" />
 
             {{-- ===== MAIN CONTENT AREA ===== --}}
             <main class="w-full md:w-3/4 flex flex-col gap-8">
 
                 {{-- Visual Shape Filter Bar (Synchronized with Alpine Form) --}}
-                <div class="p-5 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-x-auto scrollbar-hide z-10 shadow-lg shadow-black/40">
+                <div class="p-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-x-auto z-10 shadow-lg shadow-black/40 
+                            [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-zinc-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-zinc-500 transition-colors">
 
                     @php
                         // Upgraded SVG Icon Library with distinct vehicle silhouettes
@@ -43,42 +44,43 @@
                                 '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 11l1-5h12l3 5M3 15h18v-2a1 1 0 00-1-1H4a1 1 0 00-1 1v2zm3 0v2a1 1 0 001 1h2a1 1 0 001-1v-2m6 0v2a1 1 0 001 1h2a1 1 0 001-1v-2" />',
                             'Wagon' => 
                                 '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 11l1.5-4h12v4M3 15h18v-2a1 1 0 00-1-1H4a1 1 0 00-1 1v2zm3 0v2a1 1 0 001 1h2a1 1 0 001-1v-2m6 0v2a1 1 0 001 1h2a1 1 0 001-1v-2" />',
-                            
-                            // Generic fallback icon / All Types (Kept as safety net)
+                            // Generic fallback icon / All Types
                             'default' => 
                                 '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />',
                         ];
                     @endphp
 
-                    <div class="flex gap-4 min-w-max pb-1">
+                    <div class="flex gap-3 min-w-max pb-2">
                         {{-- "All Types" Button --}}
                         <label class="cursor-pointer group flex-1">
-                            <input type="radio" name="filter[car_type_id]" value="" class="hidden" form="filterForm"
+                            <input type="radio" name="filter[car_type_id]" value="" class="hidden peer" form="filterForm"
                                 @change="submitForm()" {{ !request('filter.car_type_id') ? 'checked' : '' }}>
-                            <div class="px-5 py-4 rounded-xl border transition-all duration-300 flex flex-col items-center justify-center min-w-[120px] gap-3
-                            {{ !request('filter.car_type_id') ? 'bg-[#dc2626]/10 border-[#dc2626]/80 text-[#dc2626] shadow-[0_0_15px_rgba(220,38,38,0.2)]' : 'bg-[#18181b] border-white/5 text-zinc-500 hover:border-white/20 hover:text-zinc-300 hover:bg-[#27272a]/50' }}">
-                                <svg class="w-9 h-9 opacity-90 group-hover:opacity-100 transition duration-300 transform group-hover:scale-105" fill="none"
+                            <div class="px-3 py-3 rounded-xl border transition-all duration-300 flex flex-col items-center justify-center min-w-[96px] gap-2
+                                bg-[#18181b] border-white/5 text-zinc-500 hover:border-white/20 hover:text-zinc-300 hover:bg-[#27272a]/50
+                                peer-checked:bg-[#dc2626]/10 peer-checked:border-[#dc2626]/80 peer-checked:text-[#dc2626] peer-checked:shadow-[0_0_15px_rgba(220,38,38,0.2)]">
+                                <svg class="w-7 h-7 opacity-90 group-hover:opacity-100 transition duration-300 transform group-hover:scale-105" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                         d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                                 </svg>
-                                <span class="font-bold text-xs tracking-widest uppercase">All Models</span>
+                                <span class="font-bold text-[10px] sm:text-xs tracking-widest uppercase">All Models</span>
                             </div>
                         </label>
 
                         {{-- Dynamic Type Buttons mapped to DB Types --}}
                         @foreach ($carTypes as $type)
                             <label class="cursor-pointer group flex-1">
-                                <input type="radio" name="filter[car_type_id]" value="{{ $type->id }}" class="hidden"
+                                <input type="radio" name="filter[car_type_id]" value="{{ $type->id }}" class="hidden peer"
                                     form="filterForm" @change="submitForm()"
                                     {{ request('filter.car_type_id') == $type->id ? 'checked' : '' }}>
-                                <div class="px-5 py-4 rounded-xl border transition-all duration-300 flex flex-col items-center justify-center min-w-[120px] gap-3
-                                {{ request('filter.car_type_id') == $type->id ? 'bg-[#dc2626]/10 border-[#dc2626]/80 text-[#dc2626] shadow-[0_0_15px_rgba(220,38,38,0.2)]' : 'bg-[#18181b] border-white/5 text-zinc-500 hover:border-white/20 hover:text-zinc-300 hover:bg-[#27272a]/50' }}">
-                                    <svg class="w-9 h-9 opacity-90 group-hover:opacity-100 transition duration-300 transform group-hover:-translate-y-0.5" fill="none"
+                                <div class="px-3 py-3 rounded-xl border transition-all duration-300 flex flex-col items-center justify-center min-w-[96px] gap-2
+                                    bg-[#18181b] border-white/5 text-zinc-500 hover:border-white/20 hover:text-zinc-300 hover:bg-[#27272a]/50
+                                    peer-checked:bg-[#dc2626]/10 peer-checked:border-[#dc2626]/80 peer-checked:text-[#dc2626] peer-checked:shadow-[0_0_15px_rgba(220,38,38,0.2)]">
+                                    <svg class="w-7 h-7 opacity-90 group-hover:opacity-100 transition duration-300 transform group-hover:-translate-y-0.5" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         {!! $carIcons[$type->name] ?? $carIcons['default'] !!}
                                     </svg>
-                                    <span class="font-bold text-xs tracking-widest uppercase">{{ $type->name }}</span>
+                                    <span class="font-bold text-[10px] sm:text-xs tracking-widest uppercase">{{ $type->name }}</span>
                                 </div>
                             </label>
                         @endforeach

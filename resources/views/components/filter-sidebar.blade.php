@@ -110,8 +110,11 @@
                         <div class="grid grid-cols-5 gap-1.5">
                             @for($i = 0; $i <= 9; $i++)
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="filter[plate_ending]" value="{{ $i }}" class="hidden" @change="submitForm()" {{ request('filter.plate_ending') == "$i" ? 'checked' : '' }}>
-                                    <div class="py-1.5 text-center border rounded-lg text-sm font-medium transition {{ request('filter.plate_ending') == "$i" ? 'bg-ryb-red border-ryb-red text-white shadow-[0_0_10px_rgba(220,38,38,0.4)]' : 'bg-black/20 border-white/10 text-zinc-500 hover:text-white hover:border-white/30' }}">
+                                    {{-- ADDED "peer" class to the input --}}
+                                    <input type="radio" name="filter[plate_ending]" value="{{ $i }}" class="hidden peer" @change="submitForm()" {{ request('filter.plate_ending') == "$i" ? 'checked' : '' }}>
+                                    
+                                    {{-- REMOVED Blade styling logic. ADDED peer-checked Tailwind logic --}}
+                                    <div class="py-1.5 text-center border rounded-lg text-sm font-medium transition bg-black/20 border-white/10 text-zinc-500 hover:text-white hover:border-white/30 peer-checked:bg-ryb-red peer-checked:border-ryb-red peer-checked:text-white peer-checked:shadow-[0_0_10px_rgba(220,38,38,0.4)]">
                                         {{ $i }}
                                     </div>
                                 </label>
@@ -121,13 +124,12 @@
                 </div>
             </div>
 
-            @if(request()->hasAny(['filter', 'sort']))
-                <div class="pt-4 mt-4 border-t border-white/10">
-                    <a href="{{ $actionRoute }}" class="block w-full text-center py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl transition text-sm shadow-md">
-                        Clear All Filters
-                    </a>
-                </div>
-            @endif
+            {{-- REMOVED the @if wrapper so the button is always available --}}
+            <div class="pt-4 mt-4 border-t border-white/10">
+                <a href="{{ $actionRoute }}" class="block w-full text-center py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl transition text-sm shadow-md">
+                    Clear All Filters
+                </a>
+            </div>
         </form>
     </div>
 </aside>
